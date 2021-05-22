@@ -29,7 +29,7 @@ vector<string> novo;
 
 %}
 
-%token NUM ID LET STR IF ELSE
+%token NUM ID LET STR IF ELSE WHILE
 
 
 // Start indica o símbolo inicial da gramática
@@ -42,6 +42,7 @@ S : CMDs { imprime(resolve_enderecos($1.c)); }
 
 CMDs : CMD ';' CMDs   { $$.c = $1.c + $3.c; }
      | DECLIF CMDs    { $$.c = $1.c + $2.c; }
+     | DECLWHILE CMDs { $$.c = $1.c + $2.c; }
      |                { $$.c = novo; }
      ;
 
@@ -50,8 +51,8 @@ CMD : ATR              { $$.c = $1.c + "^"; }
     | DECLOBJ          { $$.c = $1.c; }
     ;
     
-DECLIF : IF '(' R ')' CMD ';' { string endif = gera_label( "end_if" );
-                                $$.c = $3.c + "!" + endif + "?" + $5.c + (":" +  endif); }
+DECLIF : IF '(' R ')' CMD ';'                   { string endif = gera_label( "end_if" );
+                                                  $$.c = $3.c + "!" + endif + "?" + $5.c + (":" +  endif); }
        | IF '(' R ')' '{' CMDs '}' ELSE CMD ';' { string then = gera_label ( "then" );
                                                   string endif = gera_label ( "end_if" );
                                                   $$.c = $3.c + then + "?" + $9.c + endif + "#" + (":" + then) + $6.c + (":" + endif); }
@@ -59,6 +60,12 @@ DECLIF : IF '(' R ')' CMD ';' { string endif = gera_label( "end_if" );
                                                   string endif = gera_label ( "end_if" );
                                                   $$.c = $3.c + then + "?" + $8.c + endif + "#" + (":" + then) + $5.c + (":" + endif); }
        ;
+
+DECLWHILE : WHILE '(' R ')' '{' CMDs '}' { string endwhile = gera_label( "end_while" );
+                                           string beginwhile = gera_label( "begin_while" );
+                                           $$.c = novo + (":" + beginwhile) + $3.c + "!" + endwhile + "?" + $6.c + $3.c + beginwhile + "?" + (":" + endwhile);}
+          ;
+          
 DECLVARs : DECLVAR ',' DECLVARs { $$.c = $1.c + $3.c; }
          | DECLVAR    
          ;
@@ -70,6 +77,7 @@ DECLVAR : ID '=' R                              { $$.c = $1.c + "&" + $1.c + $3.
 DECLOBJ : ID '.' ID '=' R                       { $$.c = $1.c + "@" + $3.c + $5.c + "[=]" + "^"; }
         | ID '.' ID '[' E ']' '=' R             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + $8.c + "[=]" + "^"; }
         | ID '[' E ']' '=' ID '.' ID '+' R      { $$.c = $1.c + "@" + $3.c + $6.c + "@" + $8.c + "[@]" + $10.c + "+" + "[=]" + "^"; }
+        | ID '[' E ']' '=' R                    { $$.c = $1.c + "@" + $3.c + $6.c + "[=]" + "^"; }
         ;
         
 ATR : ID '=' ATR { $$.c = $1.c + $3.c + "="; }

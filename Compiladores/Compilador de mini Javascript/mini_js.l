@@ -26,6 +26,9 @@ STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
 "if"	   { yylval.c = novo + "if"; 
              return IF; }
              
+"while"    { yylval.c = novo + "while"; 
+             return WHILE; }             
+             
 "else"	   { yylval.c = novo + "else"; 
              return ELSE; }             
 
