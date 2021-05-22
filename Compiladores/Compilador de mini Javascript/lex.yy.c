@@ -743,7 +743,7 @@ case 2:
 YY_RULE_SETUP
 #line 13 "mini_js.l"
 { yylval.c = novo + yytext; 
-             return NUM; }
+             return NUM; }   
 	YY_BREAK
 case 3:
 YY_RULE_SETUP

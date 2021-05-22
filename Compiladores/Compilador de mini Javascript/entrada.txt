@@ -1,9 +1,7 @@
-let a = "ABA", c = 'CATE', resultado;
-if( a == c )
-  resultado = "Ta' errado!";
-else if( a < c ) {
-  resultado = "a vem antes de c: ";
-  resultado = resultado + a + '<' + c;
-}
-else
-  resultado = "Deu ruim!";
+let obj = {}, i = -2;
+obj.nome = "Manoel";
+obj.nums = [];
+obj.nums[0] = 12;
+obj.nums[3] = 13;
+obj.nums[i+3] = 45;
+obj['nom' + 'e'] = obj.nome + "!";

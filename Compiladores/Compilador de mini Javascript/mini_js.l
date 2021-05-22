@@ -11,7 +11,7 @@ STR 	["']([^\"\n]|(\\\")|\"\")+["']
 
              
 {DOUBLE}   { yylval.c = novo + yytext; 
-             return NUM; }
+             return NUM; }   
              
 {STR}	   { yylval.c = novo + yytext;
 	     return STR; }

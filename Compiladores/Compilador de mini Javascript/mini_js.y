@@ -21,6 +21,7 @@ void yyerror(const char *);
 vector<string> concatena( vector<string> a, vector<string> b ); 
 vector<string> operator+( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, string b );
+vector<string> operator+( string a ,  vector<string> b );
 string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
 void imprime( vector<string> codigo );
@@ -80,6 +81,7 @@ R : E '<' E      { $$.c = $1.c + $3.c + "<"; }
   
 E : E '+' T { $$.c = $1.c + $3.c + "+"; }
   | E '-' T { $$.c = $1.c + $3.c + "-"; }
+  | '-' E   { $$.c = "0" + $2.c + "-"; }
   | T
   ;
 
@@ -94,6 +96,7 @@ F : ID          { $$.c = $1.c + "@"; }
   | '{' '}'     { $$.c = novo + "{}"; }
   | '[' ']'     { $$.c = novo + "[]"; }
   ;
+
 
 
 %%
@@ -120,6 +123,11 @@ vector<string> operator+( vector<string> a, vector<string> b ) {
 vector<string> operator+( vector<string> a, string b ) {
   a.push_back( b );
   return a;
+}
+
+vector<string> operator+( string a ,  vector<string> b ) {
+  b.push_back( a );
+  return b;
 }
 
 string gera_label( string prefixo ) {
