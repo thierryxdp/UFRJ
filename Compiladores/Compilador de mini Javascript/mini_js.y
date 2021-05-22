@@ -29,7 +29,7 @@ vector<string> novo;
 
 %}
 
-%token NUM ID LET STR IF ELSE WHILE
+%token NUM ID LET STR IF ELSE WHILE FOR
 
 
 // Start indica o símbolo inicial da gramática
@@ -43,6 +43,7 @@ S : CMDs { imprime(resolve_enderecos($1.c)); }
 CMDs : CMD ';' CMDs   { $$.c = $1.c + $3.c; }
      | DECLIF CMDs    { $$.c = $1.c + $2.c; }
      | DECLWHILE CMDs { $$.c = $1.c + $2.c; }
+     | DECLFOR CMDs   { $$.c = $1.c + $2.c; }
      |                { $$.c = novo; }
      ;
 
@@ -66,6 +67,14 @@ DECLWHILE : WHILE '(' R ')' '{' CMDs '}' { string endwhile = gera_label( "end_wh
                                            $$.c = novo + (":" + beginwhile) + $3.c + "!" + endwhile + "?" + $6.c + $3.c + beginwhile + "?" + (":" + endwhile);}
           ;
           
+DECLFOR : FOR '(' LET DECLVAR ';' R ';' ATR ')' '{' CMDs '}'  { string endfor = gera_label( "end_for" );
+                                                                string beginfor = gera_label( "begin_for" );
+                                                                $$.c = $4.c + (":" + beginfor) + $6.c + "!" + endfor + "?" 
+                                                                + $11.c + $8.c + "^" + $6.c + beginfor + "?" + (":" + endfor);}         
+        | FOR '(' DECLVAR ';' R ';' ATR ')' '{' CMDs '}'      
+        ;
+ 
+        
 DECLVARs : DECLVAR ',' DECLVARs { $$.c = $1.c + $3.c; }
          | DECLVAR    
          ;
@@ -78,6 +87,7 @@ DECLOBJ : ID '.' ID '=' R                       { $$.c = $1.c + "@" + $3.c + $5.
         | ID '.' ID '[' E ']' '=' R             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + $8.c + "[=]" + "^"; }
         | ID '[' E ']' '=' ID '.' ID '+' R      { $$.c = $1.c + "@" + $3.c + $6.c + "@" + $8.c + "[@]" + $10.c + "+" + "[=]" + "^"; }
         | ID '[' E ']' '=' R                    { $$.c = $1.c + "@" + $3.c + $6.c + "[=]" + "^"; }
+        | ID '[' ATR ']' '=' R                  { $$.c = $1.c + "@" + $3.c + $6.c + "[=]" + "^"; }
         ;
         
 ATR : ID '=' ATR { $$.c = $1.c + $3.c + "="; }

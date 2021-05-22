@@ -27,7 +27,10 @@ STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
              return IF; }
              
 "while"    { yylval.c = novo + "while"; 
-             return WHILE; }             
+             return WHILE; }    
+
+"for"      { yylval.c = novo + "for"; 
+             return FOR; }                          
              
 "else"	   { yylval.c = novo + "else"; 
              return ELSE; }             
