@@ -7,4 +7,3 @@ else if( a < c ) {
 }
 else
   resultado = "Deu ruim!";
-

@@ -21,6 +21,9 @@ STR 	["']([^\"\n]|(\\\")|\"\")+["']
              
 "if"	   { yylval.c = novo + "if"; 
              return IF; }
+             
+"else"	   { yylval.c = novo + "else"; 
+             return ELSE; }             
 
 {ID}       { yylval.c = novo + yytext; 
              return ID; }

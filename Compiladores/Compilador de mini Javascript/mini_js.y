@@ -29,7 +29,7 @@ vector<string> novo;
 
 %}
 
-%token NUM ID LET STR IF
+%token NUM ID LET STR IF ELSE
 
 
 // Start indica o símbolo inicial da gramática
@@ -41,15 +41,23 @@ S : CMDs { imprime(resolve_enderecos($1.c)); }
   ;
 
 CMDs : CMD ';' CMDs   { $$.c = $1.c + $3.c; }
+     | DECLIF CMDs    { $$.c = $1.c + $2.c; }
      |                { $$.c = novo; }
      ;
 
 CMD : ATR              { $$.c = $1.c + "^"; }
     | LET DECLVARs     { $$ = $2; }
-    | IF '(' R ')' CMD { string endif = gera_label( "end_if" );
-                         $$.c = $3.c + "!" + endif + "?" + $5.c + (":" +  endif); }
     ;
     
+DECLIF : IF '(' R ')' CMD ';' { string endif = gera_label( "end_if" );
+                                $$.c = $3.c + "!" + endif + "?" + $5.c + (":" +  endif); }
+       | IF '(' R ')' '{' CMDs '}' ELSE CMD ';' { string then = gera_label ( "then" );
+                                                  string endif = gera_label ( "end_if" );
+                                                  $$.c = $3.c + then + "?" + $9.c + endif + "#" + (":" + then) + $6.c + (":" + endif); }
+       | IF '(' R ')' CMD ';' ELSE CMDs         { string then = gera_label ( "then" );
+                                                  string endif = gera_label ( "end_if" );
+                                                  $$.c = $3.c + then + "?" + $8.c + endif + "#" + (":" + then) + $5.c + (":" + endif); }
+       ;
 DECLVARs : DECLVAR ',' DECLVARs { $$.c = $1.c + $3.c; }
          | DECLVAR    
          ;
@@ -64,9 +72,9 @@ ATR : ID '=' ATR { $$.c = $1.c + $3.c + "="; }
 
 R : E '<' E      { $$.c = $1.c + $3.c + "<"; }
   | E '>' E      { $$.c = $1.c + $3.c + ">"; }
-  | E '>' '=' E  { $$.c = $1.c + $3.c + ">="; }
-  | E '<' '=' E  { $$.c = $1.c + $3.c + "<="; }
-  | E '=' '=' E  { $$.c = $1.c + $3.c + "=="; }
+  | E '>' '=' E  { $$.c = $1.c + $4.c + ">="; }
+  | E '<' '=' E  { $$.c = $1.c + $4.c + "<="; }
+  | E '=' '=' E  { $$.c = $1.c + $4.c + "=="; }
   | E
   ;
   
