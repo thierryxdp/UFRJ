@@ -21,7 +21,6 @@ void yyerror(const char *);
 vector<string> concatena( vector<string> a, vector<string> b ); 
 vector<string> operator+( vector<string> a, vector<string> b );
 vector<string> operator+( vector<string> a, string b );
-vector<string> operator+( string a ,  vector<string> b );
 string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
 void imprime( vector<string> codigo );
@@ -48,6 +47,7 @@ CMDs : CMD ';' CMDs   { $$.c = $1.c + $3.c; }
 
 CMD : ATR              { $$.c = $1.c + "^"; }
     | LET DECLVARs     { $$ = $2; }
+    | DECLOBJ          { $$.c = $1.c; }
     ;
     
 DECLIF : IF '(' R ')' CMD ';' { string endif = gera_label( "end_if" );
@@ -63,8 +63,13 @@ DECLVARs : DECLVAR ',' DECLVARs { $$.c = $1.c + $3.c; }
          | DECLVAR    
          ;
          
-DECLVAR : ID '=' R { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
-        | ID       { $$.c = $1.c + "&"; }
+DECLVAR : ID '=' R                              { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+        | ID                                    { $$.c = $1.c + "&"; }
+        ;
+        
+DECLOBJ : ID '.' ID '=' R                       { $$.c = $1.c + "@" + $3.c + $5.c + "[=]" + "^"; }
+        | ID '.' ID '[' E ']' '=' R             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + $8.c + "[=]" + "^"; }
+        | ID '[' E ']' '=' ID '.' ID '+' R      { $$.c = $1.c + "@" + $3.c + $6.c + "@" + $8.c + "[@]" + $10.c + "+" + "[=]" + "^"; }
         ;
         
 ATR : ID '=' ATR { $$.c = $1.c + $3.c + "="; }
@@ -81,7 +86,7 @@ R : E '<' E      { $$.c = $1.c + $3.c + "<"; }
   
 E : E '+' T { $$.c = $1.c + $3.c + "+"; }
   | E '-' T { $$.c = $1.c + $3.c + "-"; }
-  | '-' E   { $$.c = "0" + $2.c + "-"; }
+  | '-' E   { $$.c = novo + "0" + $2.c + "-"; }
   | T
   ;
 
@@ -125,10 +130,6 @@ vector<string> operator+( vector<string> a, string b ) {
   return a;
 }
 
-vector<string> operator+( string a ,  vector<string> b ) {
-  b.push_back( a );
-  return b;
-}
 
 string gera_label( string prefixo ) {
   static int n = 0;

@@ -3,7 +3,8 @@ DIGITO  [0-9]
 LETRA   [A-Za-z_]
 DOUBLE  {DIGITO}+("."{DIGITO}+)?
 ID      {LETRA}({LETRA}|{DIGITO})*
-STR 	["']([^\"\n]|(\\\")|\"\")+["']
+STR_1 	[']([^\'\n]|(\\\')|\'\')+[']
+STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
 
 %%
 
@@ -13,7 +14,10 @@ STR 	["']([^\"\n]|(\\\")|\"\")+["']
 {DOUBLE}   { yylval.c = novo + yytext; 
              return NUM; }   
              
-{STR}	   { yylval.c = novo + yytext;
+{STR_1}    { yylval.c = novo + yytext;
+	     return STR; }
+
+{STR_2}    { yylval.c = novo + yytext;
 	     return STR; }
 	     
 "let"	   { yylval.c = novo + "let"; 
