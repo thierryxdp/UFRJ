@@ -57,6 +57,7 @@ CMDs : CMD ';' CMDs   { $$.c = $1.c + $3.c; }
 CMD : ATR              { $$.c = $1.c + "^"; }
     | LET DECLVARs     { $$ = $2; }
     | DECLOBJ          { $$.c = $1.c; }
+    | DECLOBJDUPLO     { $$.c = $1.c; }
     ;
     
 DECLIF : IF '(' R ')' CMD ';'                   { string endif = gera_label( "end_if" );
@@ -114,7 +115,13 @@ DECLOBJ : ID '.' ID '=' R                       { $$.c = $1.c + "@" + $3.c + $5.
         ;
 
 
+DECLOBJDUPLO : DUPLO '=' DUPLO '=' E               { $$.c = $1.c + $3.c + $5.c + "[=]" + "[=]" + "^" ; }
+             | DUPLO '=' E                         { $$.c = $1.c + $3.c + "[=]" + "^" ; }             
+             | DUPLO '=' DUPLO '+' DUPLO '*' DUPLO { $$.c = $1.c + $3.c + "[@]" + $5.c + "[@]" + $7.c + "[@]" + "*" + "+" + "[=]" + "^" ; }
+             ;
 
+DUPLO : ID '[' ID ']' '[' ID ']'       {$$.c = $1.c + "@" + $3.c + "@" + "[@]" + $6.c + "@"; }
+      ;            
 
          
 ATR : ID '=' ATR { string var = pega_string($1.c);
