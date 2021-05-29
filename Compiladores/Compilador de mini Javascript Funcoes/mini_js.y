@@ -40,7 +40,7 @@ int coluna = 1;
 %token SETA
 
 %right '=' SETA
-%nonassoc '<' '>' _IGUAL MAIOR_IGUAL MENOR_IGUAL
+%nonassoc '<' '>' _IGUAL MAIOR_IGUAL MENOR_IGUAL DIF
 %left '+' '-'
 %left '*' '/' '%'
 %right '^'
