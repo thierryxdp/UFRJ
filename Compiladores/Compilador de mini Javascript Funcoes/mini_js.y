@@ -79,7 +79,7 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | BLOCO
     ;
 
-PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros = 0; }
+PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
            | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
            ; 
            
@@ -113,13 +113,17 @@ LVALUEPROP : ATRIBUTOS     { $$.c = $1.c; }
 
 
 ATRIBUTOS : ID '[' E ']' ATRIBUTOS       { $$.c = novo + "[@]" + $2.c + $4.c; }
-          | ID '.' ID ATRIBUTOS          { $$.c = novo + "[@]" + $2.c + $3.c; }
+          | ID '.' ID ATRIBUTOS          { $$.c = $1.c + "@" + $3.c + "[@]" + $4.c; }
           | ID '[' E ']'                 { $$.c = $1.c + "@" + $3.c; }
           | ID '.' ID                    { $$.c = $1.c + "@" + $3.c; }
+          | ID '.' ID '.' ID             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
+          | ID '.' ID '.' ID '[' E ']'   { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + $7.c; }                    
           | ID '.' ID '('')'             { $$.c = novo + "0" + $1.c + "@" + $3.c + "[@]" + "$"; }
-          | ID '.' ID '(' VALORES ')'    { $$.c = $5.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; contador_parametros = 0; }                      
+          | ID '.' ID '(' VALORES ')'    { $$.c = $5.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; contador_parametros = 0; }
+          | ID '.' ID '.' ID '[' E ']' '(' VALORES ')' { $$.c = $10.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + 
+                                           $7.c + "[@]" + "$"; contador_parametros = 0; }                      
           ;
-
+          
 E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
   | E '<' E             { $$.c = $1.c + $3.c + "<"; }
   | E '>' E             { $$.c = $1.c + $3.c + ">"; }
@@ -149,7 +153,7 @@ F : LVALUE          { $$.c = $1.c + "@"; }
   ;
 
 VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c; }
-        | E             { contador_parametros += 1; $$.c = $1.c; }
+        | E             { contador_parametros = 1; $$.c = $1.c; }
         ;
         
 BLOCOVAZIO : '{' '}' 
