@@ -33,6 +33,7 @@ vector<string> funcoes;
 int linha = 1;
 int coluna = 1;
 
+int contador_parametros = 0;
 %}
 
 %token NUM ID LET STRING IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
@@ -63,13 +64,16 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | FUNCTION ID '('')' CMD             { string func_endereco = gera_label( "funcao" ); 
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
                                            funcoes = funcoes + (":" + func_endereco) + $5.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
-    | FUNCTION ID '(' PARAMETERS ')' CMD 
+    | FUNCTION ID '(' PARAMETERS ')' CMD { string func_endereco = gera_label( "funcao" ); 
+                                           $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
+                                           funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $4.c; funcoes = funcoes + $6.c;
+                                           funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
     | RETURN E ';'                       { $$.c = $2.c + "\'&retorno\'" + "@" + "~"; }                               
     | BLOCO
     ;
 
-PARAMETERS : ID ',' PARAMETERS {$$.c = $1.c + $3.c; }
-           | ID
+PARAMETERS : ID ',' PARAMETERS { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^" + $3.c; contador_parametros += 1; }
+           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros = 0; }
            ; 
            
 CMD_LET :  LET DECLARACOES     { $$.c = $2.c; }
@@ -131,8 +135,12 @@ F : LVALUE          { $$.c = $1.c + "@"; }
   | '['']'          { $$.c = novo + "[]"; }
   | '(' E ')'       { $$ = $2; }
   | ID '('')'       { $$.c = novo + "0" + $1.c + "@" + "$"; }
+  | ID '(' VALORES ')'    { $$.c = $3.c + $1.c + "@" + "$"; }
   ;
 
+VALORES : E ',' VALORES { $$.c = $1.c + $3.c; contador_parametros += 1; }
+        | E             { contador_parametros += 1; $$.c = $1.c + to_string(contador_parametros); }
+        ;
 BLOCOVAZIO : '{' '}' 
            ;
 
