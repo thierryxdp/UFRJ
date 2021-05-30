@@ -40,7 +40,7 @@ int contador_parametros = 0;
 %token SETA FUNCTION RETURN
 
 %right '=' SETA
-%nonassoc '<' '>' _IGUAL MAIOR_IGUAL MENOR_IGUAL DIF
+%nonassoc '<' '>' IGUAL MAIOR_IGUAL MENOR_IGUAL DIF
 %left '+' '-'
 %left '*' '/' '%'
 %right '^'
@@ -60,7 +60,10 @@ CMDs : CMD CMDs   { $$.c = $1.c + $2.c; }
 CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | CMD_LET ';'
     | IF '(' E ')' CMD                   { string endif = gera_label("end_if");
-                                           $$.c = $3.c + "!" + endif + "?" + $5.c + (":" + endif); }                
+                                           $$.c = $3.c + "!" + endif + "?" + $5.c + (":" + endif); } 
+    | IF '(' E ')' CMD ELSE CMD          { string then = gera_label ( "then" );
+                                           string endif = gera_label ( "end_if" );
+                                           $$.c = $3.c + then + "?" + $7.c + endif + "#" + (":" + then) + $5.c + (":" + endif); }                                                          
     | FUNCTION ID '('')' CMD             { string func_endereco = gera_label( "funcao" ); 
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
                                            funcoes = funcoes + (":" + func_endereco) + $5.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
@@ -72,8 +75,8 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | BLOCO
     ;
 
-PARAMETERS : ID ',' PARAMETERS { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^" + $3.c; contador_parametros += 1; }
-           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros = 0; }
+PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros = 0; }
+           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
            ; 
            
 CMD_LET :  LET DECLARACOES     { $$.c = $2.c; }
@@ -117,6 +120,7 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
   | E MAIOR_IGUAL E     { $$.c = $1.c + $3.c + ">="; }
   | E DIF E             { $$.c = $1.c + $3.c + "!="; }
   | E MENOR_IGUAL E     { $$.c = $1.c + $3.c + "<="; }
+  | E IGUAL E           { $$.c = $1.c + $3.c + "=="; }
   | E '*' E             { $$.c = $1.c + $3.c + "*"; }
   | E '+' E             { $$.c = $1.c + $3.c + "+"; }
   | E '-' E             { $$.c = $1.c + $3.c + "-"; } 
@@ -138,8 +142,13 @@ F : LVALUE          { $$.c = $1.c + "@"; }
   | ID '(' VALORES ')'    { $$.c = $3.c + $1.c + "@" + "$"; }
   ;
 
-VALORES : E ',' VALORES { $$.c = $1.c + $3.c; contador_parametros += 1; }
-        | E             { contador_parametros += 1; $$.c = $1.c + to_string(contador_parametros); }
+VALORES : VALORES ',' E { contador_parametros += 1; 
+                          $$.c = $1.c + $3.c + to_string(contador_parametros); contador_parametros = 0; }
+        | E             { if (contador_parametros != 0){
+                          $$.c = $1.c + to_string(contador_parametros);
+                          } else {
+                           $$.c = $1.c;
+                          } contador_parametros += 1;}
         ;
 BLOCOVAZIO : '{' '}' 
            ;
