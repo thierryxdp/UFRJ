@@ -1,8 +1,8 @@
-function mdc( a, b ) {
-  if( b == 0 )
-    return a;
-  else
-    return mdc( b, a % b );
+function f( x ) {
+  let b = f;
+  f = x;
+  return b;
 }
 
-let a = mdc( 24, 33  );
+let a;
+let g = f( a = [], {} );
