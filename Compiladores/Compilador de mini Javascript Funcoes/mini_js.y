@@ -28,16 +28,15 @@ vector<string> resolve_enderecos( vector<string> entrada );
 void imprime( vector<string> codigo );
 
 vector<string> novo;
-
-map<string, int> variaveis;
+vector<string> funcoes;
 
 int linha = 1;
 int coluna = 1;
 
 %}
 
-%token NUM ID LET STR IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
-%token SETA
+%token NUM ID LET STRING IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
+%token SETA FUNCTION RETURN
 
 %right '=' SETA
 %nonassoc '<' '>' _IGUAL MAIOR_IGUAL MENOR_IGUAL DIF
@@ -50,26 +49,35 @@ int coluna = 1;
 
 %%
 
-S : CMDs { imprime( resolve_enderecos($1.c) ); }
+S : CMDs { $$.c = $1.c + "." + funcoes; imprime( resolve_enderecos($$.c) ); }
   ;
 
 CMDs : CMD CMDs   { $$.c = $1.c + $2.c; }
      | CMD 
      ;
  
-CMD : ATRIB   ';'              { $$.c = $1.c + "^"; }
+CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | CMD_LET ';'
-    | IF '(' E ')' CMD      { string endif = gera_label("end_if");
-                              $$.c = $3.c + "!" + endif + "?" + $5.c + (":" + endif); }                
+    | IF '(' E ')' CMD                   { string endif = gera_label("end_if");
+                                           $$.c = $3.c + "!" + endif + "?" + $5.c + (":" + endif); }                
+    | FUNCTION ID '('')' CMD             { string func_endereco = gera_label( "funcao" ); 
+                                           $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
+                                           funcoes = funcoes + (":" + func_endereco) + $5.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
+    | FUNCTION ID '(' PARAMETERS ')' CMD 
+    | RETURN E ';'                       { $$.c = $2.c + "\'&retorno\'" + "@" + "~"; }                               
     | BLOCO
     ;
 
+PARAMETERS : ID ',' PARAMETERS {$$.c = $1.c + $3.c; }
+           | ID
+           ; 
+           
 CMD_LET :  LET DECLARACOES     { $$.c = $2.c; }
                  ;
 
-BLOCO : '{' CMDs '}'
-             | BLOCOVAZIO
-             ;
+BLOCO : '{' CMDs '}'          { $$.c = $2.c; }
+      | BLOCOVAZIO
+      ;
 
 DECLARACOES: DECLARACAO ',' DECLARACOES  { $$.c = $1.c + $3.c; }
            | DECLARACAO
@@ -118,10 +126,11 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
 F : LVALUE          { $$.c = $1.c + "@"; }
   | LVALUEPROP      { $$.c = $1.c + "[@]"; }
   | NUM             { $$.c = $1.c; }
-  | STR             { $$.c = $1.c; }
+  | STRING          { $$.c = $1.c; }
   | BLOCOVAZIO      { $$.c = novo + "{}"; }
   | '['']'          { $$.c = novo + "[]"; }
   | '(' E ')'       { $$ = $2; }
+  | ID '('')'       { $$.c = novo + "0" + $1.c + "@" + "$"; }
   ;
 
 BLOCOVAZIO : '{' '}' 
@@ -136,8 +145,6 @@ BLOCOVAZIO : '{' '}'
 void imprime( vector<string> codigo ){
   for (int i = 0; i < codigo.size(); i++)
     cout << codigo[i] << endl;
-  
-  cout << "." << endl;
 }
 
 vector<string> concatena( vector<string> a, vector<string> b ) {

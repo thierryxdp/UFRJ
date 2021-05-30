@@ -9,34 +9,40 @@ STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
 
 "\t"       { coluna += 4; }
 " "        { coluna++; }
-"\n"	   { linha++; coluna = 1; }
+"\n"       { linha++; coluna = 1; }
 
              
 {DOUBLE}   { yylval.c = novo + yytext; 
              return NUM; }   
              
 {STR_1}    { yylval.c = novo + yytext;
-	     return STR; }
+	     return STRING; }
 
 {STR_2}    { yylval.c = novo + yytext;
-	     return STR; }
+	     return STRING; }
    
-">="	   { yylval.c = novo + "erro: >="; 
+">="       { yylval.c = novo + "erro: >="; 
              return MAIOR_IGUAL; }
-"<="	   { yylval.c = novo + "erro: <="; 
+"<="       { yylval.c = novo + "erro: <="; 
              return MENOR_IGUAL; }
-"=="	   { yylval.c = novo + "erro: =="; 
+"=="       { yylval.c = novo + "erro: =="; 
              return IGUAL; }  
 
-"=>"	   { yylval.c = novo + "erro: =>"; 
+"=>"       { yylval.c = novo + "erro: =>"; 
              return SETA; }            
 
-"!="	   { yylval.c = novo + "erro: !="; 
+"!="       { yylval.c = novo + "erro: !="; 
              return DIF; }                    
 	     
-"let"	   { yylval.c = novo + "erro: let"; 
+"let"      { yylval.c = novo + "erro: let"; 
              return LET; }
              
+"function" { yylval.c = novo + "erro: function"; 
+             return FUNCTION; }
+
+"return"   { yylval.c = novo + "erro: return"; 
+             return RETURN; }             
+                          
 "if"	   { yylval.c = novo + "erro: if"; 
              return IF; }
              
