@@ -42,7 +42,12 @@ STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
 
 "return"   { yylval.c = novo + "erro: return"; 
              return RETURN; }             
-                          
+
+"asm{".*"}"  {  string lexema = trim( yytext + 3, "{}" ); 
+                yylval.c = tokeniza( lexema );
+                coluna += strlen( yytext ); 
+                return ASM; }   
+                                       
 "if"	   { yylval.c = novo + "erro: if"; 
              return IF; }
              

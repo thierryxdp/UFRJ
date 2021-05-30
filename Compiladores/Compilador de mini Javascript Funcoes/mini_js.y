@@ -27,6 +27,9 @@ string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
 void imprime( vector<string> codigo );
 
+string trim (string original, string remove);
+vector<string> tokeniza(string original);
+
 vector<string> novo;
 vector<string> funcoes;
 
@@ -37,7 +40,7 @@ int contador_parametros = 0;
 %}
 
 %token NUM ID LET STRING IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
-%token SETA FUNCTION RETURN
+%token SETA FUNCTION RETURN ASM
 
 %right '=' SETA
 %nonassoc '<' '>' IGUAL MAIOR_IGUAL MENOR_IGUAL DIF
@@ -59,6 +62,7 @@ CMDs : CMD CMDs   { $$.c = $1.c + $2.c; }
  
 CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | CMD_LET ';'
+    | E ASM ';'                          { $$.c = $1.c + $2.c + "^"; }
     | IF '(' E ')' CMD                   { string endif = gera_label("end_if");
                                            $$.c = $3.c + "!" + endif + "?" + $5.c + (":" + endif); } 
     | IF '(' E ')' CMD ELSE CMD          { string then = gera_label ( "then" );
@@ -158,6 +162,32 @@ BLOCOVAZIO : '{' '}'
 
 #include "lex.yy.c"
 
+string trim (string original, string remove){
+  string ret = "";
+  for (int i = 0; original[i] != '\0'; ++i){
+    int avaliador = 0;
+    for (int j = 0 ; remove[j] != '\0'; j++){
+      if (original[i] == remove[j]) avaliador = 1;
+    }
+    if (!avaliador) ret += original[i];
+  }
+  return ret;
+}
+
+vector<string> tokeniza(string original){
+  string a = "";
+  vector<string> retorno;
+  for (int i = 0; original[i] != '\0'; ++i){
+    if (original[i] != ' '){
+      a += original[i];
+    } else {
+      retorno.push_back(a);
+      a = "";
+    }
+  }
+  retorno.push_back(a);
+  return retorno;
+}
 
 void imprime( vector<string> codigo ){
   for (int i = 0; i < codigo.size(); i++)

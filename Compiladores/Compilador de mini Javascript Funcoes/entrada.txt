@@ -1,7 +1,5 @@
-function teste( a, b ) {
-  if( a > b )
-    return a;
+function log( msg ) {
+  msg asm{println # undefined};
 }
 
-let um = teste( 3, 4 ),
-    dois = teste( 4, 3 );
+let r = log( 'Hello, world!' );
