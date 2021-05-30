@@ -73,8 +73,8 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
                                            funcoes = funcoes + (":" + func_endereco) + $5.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
     | FUNCTION ID '(' PARAMETERS ')' CMD { string func_endereco = gera_label( "funcao" ); 
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
-                                           funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $4.c; funcoes = funcoes + $6.c;
-                                           funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
+                                           funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $4.c; contador_parametros = 0;
+                                           funcoes = funcoes + $6.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
     | RETURN E ';'                       { $$.c = $2.c + "\'&retorno\'" + "@" + "~"; }                               
     | BLOCO
     ;
@@ -108,14 +108,16 @@ ATRIB : LVALUEPROP '=' ATRIB    { $$.c = $1.c + $3.c + "[=]"; }
 LVALUE : ID   { $$.c = $1.c; }
        ;
 
-LVALUEPROP : ATRIBUTOS  
+LVALUEPROP : ATRIBUTOS     { $$.c = $1.c; }
            ;
 
 
-ATRIBUTOS : '[' E ']' ATRIBUTOS       { $$.c = novo + "[@]" + $2.c + $4.c; }
-          | '.' ID ATRIBUTOS          { $$.c = novo + "[@]" + $2.c + $3.c; }
-          |  '[' E ']'   
-          | '.' ID                       
+ATRIBUTOS : ID '[' E ']' ATRIBUTOS       { $$.c = novo + "[@]" + $2.c + $4.c; }
+          | ID '.' ID ATRIBUTOS          { $$.c = novo + "[@]" + $2.c + $3.c; }
+          | ID '[' E ']'                 { $$.c = $1.c + "@" + $3.c; }
+          | ID '.' ID                    { $$.c = $1.c + "@" + $3.c; }
+          | ID '.' ID '('')'             { $$.c = novo + "0" + $1.c + "@" + $3.c + "[@]" + "$"; }
+          | ID '.' ID '(' VALORES ')'    { $$.c = $5.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; contador_parametros = 0; }                      
           ;
 
 E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
@@ -136,24 +138,20 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
 
 
 F : LVALUE          { $$.c = $1.c + "@"; }
-  | LVALUEPROP      { $$.c = $1.c + "[@]"; }
+  | LVALUEPROP      { $$.c = $1.c; }
   | NUM             { $$.c = $1.c; }
   | STRING          { $$.c = $1.c; }
   | BLOCOVAZIO      { $$.c = novo + "{}"; }
   | '['']'          { $$.c = novo + "[]"; }
   | '(' E ')'       { $$ = $2; }
   | ID '('')'       { $$.c = novo + "0" + $1.c + "@" + "$"; }
-  | ID '(' VALORES ')'    { $$.c = $3.c + $1.c + "@" + "$"; }
+  | ID '(' VALORES ')'    { $$.c = $3.c + to_string(contador_parametros) + $1.c + "@" + "$"; contador_parametros = 0; }
   ;
 
-VALORES : VALORES ',' E { contador_parametros += 1; 
-                          $$.c = $1.c + $3.c + to_string(contador_parametros); contador_parametros = 0; }
-        | E             { if (contador_parametros != 0){
-                          $$.c = $1.c + to_string(contador_parametros);
-                          } else {
-                           $$.c = $1.c;
-                          } contador_parametros += 1;}
+VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c; }
+        | E             { contador_parametros += 1; $$.c = $1.c; }
         ;
+        
 BLOCOVAZIO : '{' '}' 
            ;
 
