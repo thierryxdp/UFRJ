@@ -100,27 +100,48 @@ DECLARACAO : ID '=' E   { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
            ;
 
 ATRIB : LVALUEPROP '=' ATRIB    { $$.c = $1.c + $3.c + "[=]"; }
-      | LVALUE '=' ATRIB        { $$.c = $1.c + $3.c + "="; }
+      | ID '=' ATRIB            { $$.c = $1.c + $3.c + "="; }
       | E                       { $$.c = $1.c; }
       ;
 
 
-LVALUE : ID   { $$.c = $1.c; }
-       ;
 
 LVALUEPROP : ATRIBUTOS     { $$.c = $1.c; }
            ;
 
-
-ATRIBUTOS : ID '[' E ']' ATRIBUTOS       { $$.c = novo + "[@]" + $2.c + $4.c; }
+RVALUE : ID '[' E ']'                { $$.c = $1.c + "@" + $3.c + "[@]"; }
+       | ID '.' ID                    { $$.c = $1.c + "@" + $3.c + "[@]"; }
+       | ID '.' ID '[' E ']'         { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]"; }          
+       | ID '.' ID '.' ID             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
+       | ID '.' ID '.' ID '[' E ']'  { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + $7.c; }                    
+       | ID '.' ID '('')'             { $$.c = novo + "0" + $1.c + "@" + $3.c + "[@]" + "$"; }
+       | ID '.' ID '(' VALORES ')'    { $$.c = $5.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; contador_parametros = 0; }
+          
+       | ID '.' ID '[' E ']' '(' VALORES ')'    { $$.c = $8.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + "$"; 
+                                                     contador_parametros = 0; }
+       | ID '[' E ']' '(' VALORES ')'           { $$.c = $6.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; 
+                                                     contador_parametros = 0; }
+          
+       | ID '.' ID '.' ID '[' E ']' '(' VALORES ')' { $$.c = $10.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + 
+                                           $7.c + "[@]" + "$"; contador_parametros = 0; }   
+       | ID                           { $$.c = $1.c + "@"; }                   
+       ;
+       
+ATRIBUTOS : ID '[' ID ']' ATRIBUTOS       { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
           | ID '.' ID ATRIBUTOS          { $$.c = $1.c + "@" + $3.c + "[@]" + $4.c; }
-          | ID '[' E ']'                 { $$.c = $1.c + "@" + $3.c; }
+          | ID '[' ID ']'                { $$.c = $1.c + "@" + $3.c; }
           | ID '.' ID                    { $$.c = $1.c + "@" + $3.c; }
           | ID '.' ID '[' E ']'          { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }          
           | ID '.' ID '.' ID             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
           | ID '.' ID '.' ID '[' E ']'   { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + $7.c; }                    
           | ID '.' ID '('')'             { $$.c = novo + "0" + $1.c + "@" + $3.c + "[@]" + "$"; }
           | ID '.' ID '(' VALORES ')'    { $$.c = $5.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; contador_parametros = 0; }
+          
+          | ID '.' ID '[' ID ']' '(' VALORES ')'    { $$.c = $8.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + "$"; 
+                                                     contador_parametros = 0; }
+          | ID '[' ID ']' '(' VALORES ')'           { $$.c = $6.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; 
+                                                     contador_parametros = 0; }
+          
           | ID '.' ID '.' ID '[' E ']' '(' VALORES ')' { $$.c = $10.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + 
                                            $7.c + "[@]" + "$"; contador_parametros = 0; }                      
           ;
@@ -142,8 +163,7 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
 
 
 
-F : LVALUE          { $$.c = $1.c + "@"; }
-  | LVALUEPROP      { $$.c = $1.c; }
+F : RVALUE          { $$.c = $1.c; }
   | NUM             { $$.c = $1.c; }
   | STRING          { $$.c = $1.c; }
   | ID '=' E        { $$.c = $1.c + $3.c + "="; }  
