@@ -41,7 +41,7 @@ int contador_argumentos = 0;
 %}
 
 %token NUM ID LET STRING IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
-%token SETA FUNCTION RETURN ASM
+%token SETA FUNCTION RETURN ASM TRUE FALSE
 
 %right '=' SETA
 %nonassoc '<' '>' IGUAL MAIOR_IGUAL MENOR_IGUAL DIF
@@ -101,6 +101,10 @@ DECLARACOES: DECLARACAO ',' DECLARACOES  { $$.c = $1.c + $3.c; }
 
 DECLARACAO : ID '=' E   { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
            | ID         { $$.c = $1.c + "&"; }
+           | ID '=' FUNCTION '(' PARAMETERS ')' CMD    { string func_endereco = gera_label( "funcao" ); 
+                                                         $$.c = $1.c + "&" + $1.c + "{}" + "\'&funcao\'" + func_endereco + "[<=]" + "=" + "^"; 
+                                                         funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $5.c; contador_parametros = 0;
+                                                         funcoes = funcoes + $7.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
            ;
 
 ATRIB : LVALUEPROP '=' ATRIB    { $$.c = $1.c + $3.c + "[=]"; }
@@ -113,11 +117,12 @@ ATRIB : LVALUEPROP '=' ATRIB    { $$.c = $1.c + $3.c + "[=]"; }
 LVALUEPROP : ATRIBUTOS     { $$.c = $1.c; }
            ;
 
-RVALUE : ID '[' E ']'                { $$.c = $1.c + "@" + $3.c + "[@]"; }
+RVALUE : ID '[' E ']'                 { $$.c = $1.c + "@" + $3.c + "[@]"; }
        | ID '.' ID                    { $$.c = $1.c + "@" + $3.c + "[@]"; }
-       | ID '.' ID '[' E ']'         { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]"; }          
+       | ID '.' ID '[' E ']'          { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]"; }          
        | ID '.' ID '.' ID             { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
-       | ID '.' ID '.' ID '[' E ']'  { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + $7.c; }                    
+       | ID '.' ID '.' ID '[' E ']'   { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + $7.c; }
+       | ID '.' ID '[' E ']' '.' ID   { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c + "[@]" + $8.c + "[@]"; }                  
        | ID '.' ID '('')'             { $$.c = novo + "0" + $1.c + "@" + $3.c + "[@]" + "$"; }
        | ID '.' ID '(' VALORES ')'    { $$.c = $5.c + to_string(contador_parametros) + $1.c + "@" + $3.c + "[@]" + "$"; contador_parametros = 0; }
           
@@ -183,8 +188,13 @@ F : RVALUE          { $$.c = $1.c; }
   | ID '('')'       { $$.c = novo + "0" + $1.c + "@" + "$"; }
   | ID '(' VALORES ')'    { $$.c = $3.c + to_string(contador_parametros) + $1.c + "@" + "$"; contador_parametros = 0; }
   | ID ':' E        { $$.c = $1.c + $3.c + "[<=]"; }
+  | CONST           { $$.c = $1.c; }
   ;
 
+CONST : TRUE        { $$.c = novo + "true"; }
+      | FALSE       { $$.c = novo + "false"; }
+      ;
+      
 VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c; }
         | E             { contador_parametros = 1; $$.c = $1.c; }
         ;

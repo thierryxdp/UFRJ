@@ -48,7 +48,7 @@ STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
                 coluna += strlen( yytext ); 
                 return ASM; }   
                                        
-"if"	   { yylval.c = novo + "erro: if"; 
+"if"       { yylval.c = novo + "erro: if"; 
              return IF; }
              
 "while"    { yylval.c = novo + "erro: while"; 
@@ -57,8 +57,14 @@ STR_2 	["]([^\"\n]|(\\\")|\"\")+["]
 "for"      { yylval.c = novo + "erro: for"; 
              return FOR; }                          
              
-"else"	   { yylval.c = novo + "erro: else"; 
-             return ELSE; }             
+"else"     { yylval.c = novo + "erro: else"; 
+             return ELSE; }    
+                      
+"true"     { yylval.c = novo + "erro: true"; 
+             return TRUE; }         
+                 
+"false"    { yylval.c = novo + "erro: false"; 
+             return FALSE; }             
 
 {ID}       { yylval.c = novo + yytext; 
              return ID; }
