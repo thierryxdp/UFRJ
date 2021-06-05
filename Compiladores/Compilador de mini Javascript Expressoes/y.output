@@ -1,0 +1,3258 @@
+Terminals unused in grammar
+
+    WHILE
+    SETA
+
+
+State 22 conflicts: 2 reduce/reduce
+State 23 conflicts: 1 reduce/reduce
+State 69 conflicts: 1 shift/reduce
+State 72 conflicts: 12 shift/reduce
+State 125 conflicts: 1 shift/reduce
+State 128 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: S $end
+
+    1 S: CMDs
+
+    2 CMDs: CMD CMDs
+    3     | CMD
+
+    4 CMD: ATRIB ';'
+    5    | CMD_LET ';'
+    6    | E ASM ';'
+    7    | IF '(' E ')' CMD
+    8    | IF '(' E ')' CMD ELSE CMD
+    9    | FUNCTION ID '(' ')' CMD
+   10    | FUNCTION ID '(' PARAMETERS ')' CMD
+   11    | RETURN E ';'
+   12    | FOR '(' ATRIB ';' E ';' ATRIB ')' CMD
+   13    | BLOCO
+
+   14 PARAMETERS: PARAMETERS ',' ID
+   15           | ID
+
+   16 CMD_LET: LET DECLARACOES
+
+   17 BLOCO: '{' CMDs '}'
+   18      | BLOCOVAZIO
+
+   19 DECLARACOES: DECLARACAO ',' DECLARACOES
+   20            | DECLARACAO
+
+   21 DECLARACAO: ID '=' E
+   22           | ID
+
+   23 ATRIB: LVALUEPROP '=' ATRIB
+   24      | ID '=' ATRIB
+   25      | F
+
+   26 LVALUEPROP: ATRIBUTOS
+
+   27 RVALUE: ID '[' E ']'
+   28       | ID '.' ID
+   29       | ID '.' ID '[' E ']'
+   30       | ID '.' ID '.' ID
+   31       | ID '.' ID '.' ID '[' E ']'
+   32       | ID '.' ID '(' ')'
+   33       | ID '.' ID '(' VALORES ')'
+   34       | ID '.' ID '[' E ']' '(' VALORES ')'
+   35       | ID '[' E ']' '(' VALORES ')'
+   36       | ID '.' ID '.' ID '[' E ']' '(' VALORES ')'
+   37       | ID
+   38       | '{' VALORES '}'
+
+   39 ATRIBUTOS: ID '[' ID ']' ATRIBUTOS
+   40          | ID '.' ID ATRIBUTOS
+   41          | ID '[' ID ']'
+   42          | ID '.' ID
+   43          | ID '.' ID '[' E ']'
+   44          | ID '.' ID '.' ID
+   45          | ID '.' ID '.' ID '[' E ']'
+   46          | ID '.' ID '(' ')'
+   47          | ID '.' ID '(' VALORES ')'
+   48          | ID '.' ID '[' ID ']' '(' VALORES ')'
+   49          | ID '[' ID ']' '(' VALORES ')'
+   50          | ID '.' ID '.' ID '[' E ']' '(' VALORES ')'
+
+   51 E: E '^' E
+   52  | E '<' E
+   53  | E '>' E
+   54  | E MAIOR_IGUAL E
+   55  | E DIF E
+   56  | E MENOR_IGUAL E
+   57  | E IGUAL E
+   58  | E '*' E
+   59  | E '+' E
+   60  | E '-' E
+   61  | E '/' E
+   62  | E '%' E
+   63  | F
+
+   64 F: RVALUE
+   65  | NUM
+   66  | STRING
+   67  | ID '=' E
+   68  | BLOCOVAZIO
+   69  | '[' ']'
+   70  | '(' E ')'
+   71  | ID '(' ')'
+   72  | ID '(' VALORES ')'
+   73  | ID ':' E
+
+   74 VALORES: VALORES ',' E
+   75        | E
+
+   76 BLOCOVAZIO: '{' '}'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '%' (37) 62
+    '(' (40) 7 8 9 10 12 32 33 34 35 36 46 47 48 49 50 70 71 72
+    ')' (41) 7 8 9 10 12 32 33 34 35 36 46 47 48 49 50 70 71 72
+    '*' (42) 58
+    '+' (43) 59
+    ',' (44) 14 19 74
+    '-' (45) 60
+    '.' (46) 28 29 30 31 32 33 34 36 40 42 43 44 45 46 47 48 50
+    '/' (47) 61
+    ':' (58) 73
+    ';' (59) 4 5 6 11 12
+    '<' (60) 52
+    '=' (61) 21 23 24 67
+    '>' (62) 53
+    '[' (91) 27 29 31 34 35 36 39 41 43 45 48 49 50 69
+    ']' (93) 27 29 31 34 35 36 39 41 43 45 48 49 50 69
+    '^' (94) 51
+    '{' (123) 17 38 76
+    '}' (125) 17 38 76
+    error (256)
+    NUM (258) 65
+    ID (259) 9 10 14 15 21 22 24 27 28 29 30 31 32 33 34 35 36 37 39 40 41 42 43 44 45 46 47 48 49 50 67 71 72 73
+    LET (260) 16
+    STRING (261) 66
+    IF (262) 7 8
+    ELSE (263) 8
+    WHILE (264)
+    FOR (265) 12
+    MAIOR_IGUAL (266) 54
+    MENOR_IGUAL (267) 56
+    IGUAL (268) 57
+    DIF (269) 55
+    SETA (270)
+    FUNCTION (271) 9 10
+    RETURN (272) 11
+    ASM (273) 6
+
+
+Nonterminals, with rules where they appear
+
+    $accept (38)
+        on left: 0
+    S (39)
+        on left: 1
+        on right: 0
+    CMDs (40)
+        on left: 2 3
+        on right: 1 2 17
+    CMD (41)
+        on left: 4 5 6 7 8 9 10 11 12 13
+        on right: 2 3 7 8 9 10 12
+    PARAMETERS (42)
+        on left: 14 15
+        on right: 10 14
+    CMD_LET (43)
+        on left: 16
+        on right: 5
+    BLOCO (44)
+        on left: 17 18
+        on right: 13
+    DECLARACOES (45)
+        on left: 19 20
+        on right: 16 19
+    DECLARACAO (46)
+        on left: 21 22
+        on right: 19 20
+    ATRIB (47)
+        on left: 23 24 25
+        on right: 4 12 23 24
+    LVALUEPROP (48)
+        on left: 26
+        on right: 23
+    RVALUE (49)
+        on left: 27 28 29 30 31 32 33 34 35 36 37 38
+        on right: 64
+    ATRIBUTOS (50)
+        on left: 39 40 41 42 43 44 45 46 47 48 49 50
+        on right: 26 39 40
+    E (51)
+        on left: 51 52 53 54 55 56 57 58 59 60 61 62 63
+        on right: 6 7 8 11 12 21 27 29 31 34 35 36 43 45 50 51 52 53 54 55 56 57 58 59 60 61 62 67 70 73 74 75
+    F (52)
+        on left: 64 65 66 67 68 69 70 71 72 73
+        on right: 25 63
+    VALORES (53)
+        on left: 74 75
+        on right: 33 34 35 36 38 47 48 49 50 72 74
+    BLOCOVAZIO (54)
+        on left: 76
+        on right: 18 68
+
+
+State 0
+
+    0 $accept: . S $end
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    S           go to state 12
+    CMDs        go to state 13
+    CMD         go to state 14
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 1
+
+   65 F: NUM .
+
+    $default  reduce using rule 65 (F)
+
+
+State 2
+
+   24 ATRIB: ID . '=' ATRIB
+   27 RVALUE: ID . '[' E ']'
+   28       | ID . '.' ID
+   29       | ID . '.' ID '[' E ']'
+   30       | ID . '.' ID '.' ID
+   31       | ID . '.' ID '.' ID '[' E ']'
+   32       | ID . '.' ID '(' ')'
+   33       | ID . '.' ID '(' VALORES ')'
+   34       | ID . '.' ID '[' E ']' '(' VALORES ')'
+   35       | ID . '[' E ']' '(' VALORES ')'
+   36       | ID . '.' ID '.' ID '[' E ']' '(' VALORES ')'
+   37       | ID .
+   39 ATRIBUTOS: ID . '[' ID ']' ATRIBUTOS
+   40          | ID . '.' ID ATRIBUTOS
+   41          | ID . '[' ID ']'
+   42          | ID . '.' ID
+   43          | ID . '.' ID '[' E ']'
+   44          | ID . '.' ID '.' ID
+   45          | ID . '.' ID '.' ID '[' E ']'
+   46          | ID . '.' ID '(' ')'
+   47          | ID . '.' ID '(' VALORES ')'
+   48          | ID . '.' ID '[' ID ']' '(' VALORES ')'
+   49          | ID . '[' ID ']' '(' VALORES ')'
+   50          | ID . '.' ID '.' ID '[' E ']' '(' VALORES ')'
+   67 F: ID . '=' E
+   71  | ID . '(' ')'
+   72  | ID . '(' VALORES ')'
+   73  | ID . ':' E
+
+    '='  shift, and go to state 24
+    '('  shift, and go to state 25
+    '['  shift, and go to state 26
+    '.'  shift, and go to state 27
+    ':'  shift, and go to state 28
+
+    $default  reduce using rule 37 (RVALUE)
+
+
+State 3
+
+   16 CMD_LET: LET . DECLARACOES
+
+    ID  shift, and go to state 29
+
+    DECLARACOES  go to state 30
+    DECLARACAO   go to state 31
+
+
+State 4
+
+   66 F: STRING .
+
+    $default  reduce using rule 66 (F)
+
+
+State 5
+
+    7 CMD: IF . '(' E ')' CMD
+    8    | IF . '(' E ')' CMD ELSE CMD
+
+    '('  shift, and go to state 32
+
+
+State 6
+
+   12 CMD: FOR . '(' ATRIB ';' E ';' ATRIB ')' CMD
+
+    '('  shift, and go to state 33
+
+
+State 7
+
+    9 CMD: FUNCTION . ID '(' ')' CMD
+   10    | FUNCTION . ID '(' PARAMETERS ')' CMD
+
+    ID  shift, and go to state 34
+
+
+State 8
+
+   11 CMD: RETURN . E ';'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 37
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 9
+
+   70 F: '(' . E ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 40
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 10
+
+   17 BLOCO: '{' . CMDs '}'
+   38 RVALUE: '{' . VALORES '}'
+   76 BLOCOVAZIO: '{' . '}'
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '}'       shift, and go to state 41
+    '['       shift, and go to state 11
+
+    CMDs        go to state 42
+    CMD         go to state 14
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 43
+    F           go to state 22
+    VALORES     go to state 44
+    BLOCOVAZIO  go to state 23
+
+
+State 11
+
+   69 F: '[' . ']'
+
+    ']'  shift, and go to state 45
+
+
+State 12
+
+    0 $accept: S . $end
+
+    $end  shift, and go to state 46
+
+
+State 13
+
+    1 S: CMDs .
+
+    $default  reduce using rule 1 (S)
+
+
+State 14
+
+    2 CMDs: CMD . CMDs
+    3     | CMD .
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    $default  reduce using rule 3 (CMDs)
+
+    CMDs        go to state 47
+    CMD         go to state 14
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 15
+
+    5 CMD: CMD_LET . ';'
+
+    ';'  shift, and go to state 48
+
+
+State 16
+
+   13 CMD: BLOCO .
+
+    $default  reduce using rule 13 (CMD)
+
+
+State 17
+
+    4 CMD: ATRIB . ';'
+
+    ';'  shift, and go to state 49
+
+
+State 18
+
+   23 ATRIB: LVALUEPROP . '=' ATRIB
+
+    '='  shift, and go to state 50
+
+
+State 19
+
+   64 F: RVALUE .
+
+    $default  reduce using rule 64 (F)
+
+
+State 20
+
+   26 LVALUEPROP: ATRIBUTOS .
+
+    $default  reduce using rule 26 (LVALUEPROP)
+
+
+State 21
+
+    6 CMD: E . ASM ';'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    ASM          shift, and go to state 55
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+
+State 22
+
+   25 ATRIB: F .
+   63 E: F .
+
+    ';'       reduce using rule 25 (ATRIB)
+    ';'       [reduce using rule 63 (E)]
+    ')'       reduce using rule 25 (ATRIB)
+    ')'       [reduce using rule 63 (E)]
+    $default  reduce using rule 63 (E)
+
+
+State 23
+
+   18 BLOCO: BLOCOVAZIO .
+   68 F: BLOCOVAZIO .
+
+    $end      reduce using rule 18 (BLOCO)
+    NUM       reduce using rule 18 (BLOCO)
+    ID        reduce using rule 18 (BLOCO)
+    LET       reduce using rule 18 (BLOCO)
+    STRING    reduce using rule 18 (BLOCO)
+    IF        reduce using rule 18 (BLOCO)
+    ELSE      reduce using rule 18 (BLOCO)
+    FOR       reduce using rule 18 (BLOCO)
+    FUNCTION  reduce using rule 18 (BLOCO)
+    RETURN    reduce using rule 18 (BLOCO)
+    '('       reduce using rule 18 (BLOCO)
+    '{'       reduce using rule 18 (BLOCO)
+    '}'       reduce using rule 18 (BLOCO)
+    '}'       [reduce using rule 68 (F)]
+    '['       reduce using rule 18 (BLOCO)
+    $default  reduce using rule 68 (F)
+
+
+State 24
+
+   24 ATRIB: ID '=' . ATRIB
+   67 F: ID '=' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 2
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    ATRIB       go to state 64
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 65
+    F           go to state 22
+    BLOCOVAZIO  go to state 39
+
+
+State 25
+
+   71 F: ID '(' . ')'
+   72  | ID '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    ')'     shift, and go to state 66
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 68
+    BLOCOVAZIO  go to state 39
+
+
+State 26
+
+   27 RVALUE: ID '[' . E ']'
+   35       | ID '[' . E ']' '(' VALORES ')'
+   39 ATRIBUTOS: ID '[' . ID ']' ATRIBUTOS
+   41          | ID '[' . ID ']'
+   49          | ID '[' . ID ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 69
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 70
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 27
+
+   28 RVALUE: ID '.' . ID
+   29       | ID '.' . ID '[' E ']'
+   30       | ID '.' . ID '.' ID
+   31       | ID '.' . ID '.' ID '[' E ']'
+   32       | ID '.' . ID '(' ')'
+   33       | ID '.' . ID '(' VALORES ')'
+   34       | ID '.' . ID '[' E ']' '(' VALORES ')'
+   36       | ID '.' . ID '.' ID '[' E ']' '(' VALORES ')'
+   40 ATRIBUTOS: ID '.' . ID ATRIBUTOS
+   42          | ID '.' . ID
+   43          | ID '.' . ID '[' E ']'
+   44          | ID '.' . ID '.' ID
+   45          | ID '.' . ID '.' ID '[' E ']'
+   46          | ID '.' . ID '(' ')'
+   47          | ID '.' . ID '(' VALORES ')'
+   48          | ID '.' . ID '[' ID ']' '(' VALORES ')'
+   50          | ID '.' . ID '.' ID '[' E ']' '(' VALORES ')'
+
+    ID  shift, and go to state 71
+
+
+State 28
+
+   73 F: ID ':' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 72
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 29
+
+   21 DECLARACAO: ID . '=' E
+   22           | ID .
+
+    '='  shift, and go to state 73
+
+    $default  reduce using rule 22 (DECLARACAO)
+
+
+State 30
+
+   16 CMD_LET: LET DECLARACOES .
+
+    $default  reduce using rule 16 (CMD_LET)
+
+
+State 31
+
+   19 DECLARACOES: DECLARACAO . ',' DECLARACOES
+   20            | DECLARACAO .
+
+    ','  shift, and go to state 74
+
+    $default  reduce using rule 20 (DECLARACOES)
+
+
+State 32
+
+    7 CMD: IF '(' . E ')' CMD
+    8    | IF '(' . E ')' CMD ELSE CMD
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 75
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 33
+
+   12 CMD: FOR '(' . ATRIB ';' E ';' ATRIB ')' CMD
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 2
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    ATRIB       go to state 76
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    F           go to state 77
+    BLOCOVAZIO  go to state 39
+
+
+State 34
+
+    9 CMD: FUNCTION ID . '(' ')' CMD
+   10    | FUNCTION ID . '(' PARAMETERS ')' CMD
+
+    '('  shift, and go to state 78
+
+
+State 35
+
+   27 RVALUE: ID . '[' E ']'
+   28       | ID . '.' ID
+   29       | ID . '.' ID '[' E ']'
+   30       | ID . '.' ID '.' ID
+   31       | ID . '.' ID '.' ID '[' E ']'
+   32       | ID . '.' ID '(' ')'
+   33       | ID . '.' ID '(' VALORES ')'
+   34       | ID . '.' ID '[' E ']' '(' VALORES ')'
+   35       | ID . '[' E ']' '(' VALORES ')'
+   36       | ID . '.' ID '.' ID '[' E ']' '(' VALORES ')'
+   37       | ID .
+   67 F: ID . '=' E
+   71  | ID . '(' ')'
+   72  | ID . '(' VALORES ')'
+   73  | ID . ':' E
+
+    '='  shift, and go to state 79
+    '('  shift, and go to state 25
+    '['  shift, and go to state 80
+    '.'  shift, and go to state 81
+    ':'  shift, and go to state 28
+
+    $default  reduce using rule 37 (RVALUE)
+
+
+State 36
+
+   38 RVALUE: '{' . VALORES '}'
+   76 BLOCOVAZIO: '{' . '}'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '}'     shift, and go to state 41
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 44
+    BLOCOVAZIO  go to state 39
+
+
+State 37
+
+   11 CMD: RETURN E . ';'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ';'          shift, and go to state 82
+
+
+State 38
+
+   63 E: F .
+
+    $default  reduce using rule 63 (E)
+
+
+State 39
+
+   68 F: BLOCOVAZIO .
+
+    $default  reduce using rule 68 (F)
+
+
+State 40
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   70 F: '(' E . ')'
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ')'          shift, and go to state 83
+
+
+State 41
+
+   76 BLOCOVAZIO: '{' '}' .
+
+    $default  reduce using rule 76 (BLOCOVAZIO)
+
+
+State 42
+
+   17 BLOCO: '{' CMDs . '}'
+
+    '}'  shift, and go to state 84
+
+
+State 43
+
+    6 CMD: E . ASM ';'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   75 VALORES: E .
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    ASM          shift, and go to state 55
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+    $default  reduce using rule 75 (VALORES)
+
+
+State 44
+
+   38 RVALUE: '{' VALORES . '}'
+   74 VALORES: VALORES . ',' E
+
+    ','  shift, and go to state 85
+    '}'  shift, and go to state 86
+
+
+State 45
+
+   69 F: '[' ']' .
+
+    $default  reduce using rule 69 (F)
+
+
+State 46
+
+    0 $accept: S $end .
+
+    $default  accept
+
+
+State 47
+
+    2 CMDs: CMD CMDs .
+
+    $default  reduce using rule 2 (CMDs)
+
+
+State 48
+
+    5 CMD: CMD_LET ';' .
+
+    $default  reduce using rule 5 (CMD)
+
+
+State 49
+
+    4 CMD: ATRIB ';' .
+
+    $default  reduce using rule 4 (CMD)
+
+
+State 50
+
+   23 ATRIB: LVALUEPROP '=' . ATRIB
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 2
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    ATRIB       go to state 87
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    F           go to state 77
+    BLOCOVAZIO  go to state 39
+
+
+State 51
+
+   54 E: E MAIOR_IGUAL . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 88
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 52
+
+   56 E: E MENOR_IGUAL . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 89
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 53
+
+   57 E: E IGUAL . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 90
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 54
+
+   55 E: E DIF . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 91
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 55
+
+    6 CMD: E ASM . ';'
+
+    ';'  shift, and go to state 92
+
+
+State 56
+
+   52 E: E '<' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 93
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 57
+
+   53 E: E '>' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 94
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 58
+
+   59 E: E '+' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 95
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 59
+
+   60 E: E '-' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 96
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 60
+
+   58 E: E '*' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 97
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 61
+
+   61 E: E '/' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 98
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 62
+
+   62 E: E '%' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 99
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 63
+
+   51 E: E '^' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 100
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 64
+
+   24 ATRIB: ID '=' ATRIB .
+
+    $default  reduce using rule 24 (ATRIB)
+
+
+State 65
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   67 F: ID '=' E .
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+    $default  reduce using rule 67 (F)
+
+
+State 66
+
+   71 F: ID '(' ')' .
+
+    $default  reduce using rule 71 (F)
+
+
+State 67
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   75 VALORES: E .
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+    $default  reduce using rule 75 (VALORES)
+
+
+State 68
+
+   72 F: ID '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 101
+    ','  shift, and go to state 85
+
+
+State 69
+
+   27 RVALUE: ID . '[' E ']'
+   28       | ID . '.' ID
+   29       | ID . '.' ID '[' E ']'
+   30       | ID . '.' ID '.' ID
+   31       | ID . '.' ID '.' ID '[' E ']'
+   32       | ID . '.' ID '(' ')'
+   33       | ID . '.' ID '(' VALORES ')'
+   34       | ID . '.' ID '[' E ']' '(' VALORES ')'
+   35       | ID . '[' E ']' '(' VALORES ')'
+   36       | ID . '.' ID '.' ID '[' E ']' '(' VALORES ')'
+   37       | ID .
+   39 ATRIBUTOS: ID '[' ID . ']' ATRIBUTOS
+   41          | ID '[' ID . ']'
+   49          | ID '[' ID . ']' '(' VALORES ')'
+   67 F: ID . '=' E
+   71  | ID . '(' ')'
+   72  | ID . '(' VALORES ')'
+   73  | ID . ':' E
+
+    '='  shift, and go to state 79
+    '('  shift, and go to state 25
+    '['  shift, and go to state 80
+    ']'  shift, and go to state 102
+    '.'  shift, and go to state 81
+    ':'  shift, and go to state 28
+
+    ']'       [reduce using rule 37 (RVALUE)]
+    $default  reduce using rule 37 (RVALUE)
+
+
+State 70
+
+   27 RVALUE: ID '[' E . ']'
+   35       | ID '[' E . ']' '(' VALORES ')'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 103
+
+
+State 71
+
+   28 RVALUE: ID '.' ID .
+   29       | ID '.' ID . '[' E ']'
+   30       | ID '.' ID . '.' ID
+   31       | ID '.' ID . '.' ID '[' E ']'
+   32       | ID '.' ID . '(' ')'
+   33       | ID '.' ID . '(' VALORES ')'
+   34       | ID '.' ID . '[' E ']' '(' VALORES ')'
+   36       | ID '.' ID . '.' ID '[' E ']' '(' VALORES ')'
+   40 ATRIBUTOS: ID '.' ID . ATRIBUTOS
+   42          | ID '.' ID .
+   43          | ID '.' ID . '[' E ']'
+   44          | ID '.' ID . '.' ID
+   45          | ID '.' ID . '.' ID '[' E ']'
+   46          | ID '.' ID . '(' ')'
+   47          | ID '.' ID . '(' VALORES ')'
+   48          | ID '.' ID . '[' ID ']' '(' VALORES ')'
+   50          | ID '.' ID . '.' ID '[' E ']' '(' VALORES ')'
+
+    ID   shift, and go to state 104
+    '('  shift, and go to state 105
+    '['  shift, and go to state 106
+    '.'  shift, and go to state 107
+
+    '='       reduce using rule 42 (ATRIBUTOS)
+    $default  reduce using rule 28 (RVALUE)
+
+    ATRIBUTOS  go to state 108
+
+
+State 72
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   73 F: ID ':' E .
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+    MAIOR_IGUAL  [reduce using rule 73 (F)]
+    MENOR_IGUAL  [reduce using rule 73 (F)]
+    IGUAL        [reduce using rule 73 (F)]
+    DIF          [reduce using rule 73 (F)]
+    '<'          [reduce using rule 73 (F)]
+    '>'          [reduce using rule 73 (F)]
+    '+'          [reduce using rule 73 (F)]
+    '-'          [reduce using rule 73 (F)]
+    '*'          [reduce using rule 73 (F)]
+    '/'          [reduce using rule 73 (F)]
+    '%'          [reduce using rule 73 (F)]
+    '^'          [reduce using rule 73 (F)]
+    $default     reduce using rule 73 (F)
+
+
+State 73
+
+   21 DECLARACAO: ID '=' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 109
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 74
+
+   19 DECLARACOES: DECLARACAO ',' . DECLARACOES
+
+    ID  shift, and go to state 29
+
+    DECLARACOES  go to state 110
+    DECLARACAO   go to state 31
+
+
+State 75
+
+    7 CMD: IF '(' E . ')' CMD
+    8    | IF '(' E . ')' CMD ELSE CMD
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ')'          shift, and go to state 111
+
+
+State 76
+
+   12 CMD: FOR '(' ATRIB . ';' E ';' ATRIB ')' CMD
+
+    ';'  shift, and go to state 112
+
+
+State 77
+
+   25 ATRIB: F .
+
+    $default  reduce using rule 25 (ATRIB)
+
+
+State 78
+
+    9 CMD: FUNCTION ID '(' . ')' CMD
+   10    | FUNCTION ID '(' . PARAMETERS ')' CMD
+
+    ID   shift, and go to state 113
+    ')'  shift, and go to state 114
+
+    PARAMETERS  go to state 115
+
+
+State 79
+
+   67 F: ID '=' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 65
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 80
+
+   27 RVALUE: ID '[' . E ']'
+   35       | ID '[' . E ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 70
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 81
+
+   28 RVALUE: ID '.' . ID
+   29       | ID '.' . ID '[' E ']'
+   30       | ID '.' . ID '.' ID
+   31       | ID '.' . ID '.' ID '[' E ']'
+   32       | ID '.' . ID '(' ')'
+   33       | ID '.' . ID '(' VALORES ')'
+   34       | ID '.' . ID '[' E ']' '(' VALORES ')'
+   36       | ID '.' . ID '.' ID '[' E ']' '(' VALORES ')'
+
+    ID  shift, and go to state 116
+
+
+State 82
+
+   11 CMD: RETURN E ';' .
+
+    $default  reduce using rule 11 (CMD)
+
+
+State 83
+
+   70 F: '(' E ')' .
+
+    $default  reduce using rule 70 (F)
+
+
+State 84
+
+   17 BLOCO: '{' CMDs '}' .
+
+    $default  reduce using rule 17 (BLOCO)
+
+
+State 85
+
+   74 VALORES: VALORES ',' . E
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 117
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 86
+
+   38 RVALUE: '{' VALORES '}' .
+
+    $default  reduce using rule 38 (RVALUE)
+
+
+State 87
+
+   23 ATRIB: LVALUEPROP '=' ATRIB .
+
+    $default  reduce using rule 23 (ATRIB)
+
+
+State 88
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   54  | E MAIOR_IGUAL E .
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '+'  shift, and go to state 58
+    '-'  shift, and go to state 59
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    MAIOR_IGUAL  error (nonassociative)
+    MENOR_IGUAL  error (nonassociative)
+    IGUAL        error (nonassociative)
+    DIF          error (nonassociative)
+    '<'          error (nonassociative)
+    '>'          error (nonassociative)
+
+    $default  reduce using rule 54 (E)
+
+
+State 89
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   56  | E MENOR_IGUAL E .
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '+'  shift, and go to state 58
+    '-'  shift, and go to state 59
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    MAIOR_IGUAL  error (nonassociative)
+    MENOR_IGUAL  error (nonassociative)
+    IGUAL        error (nonassociative)
+    DIF          error (nonassociative)
+    '<'          error (nonassociative)
+    '>'          error (nonassociative)
+
+    $default  reduce using rule 56 (E)
+
+
+State 90
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   57  | E IGUAL E .
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '+'  shift, and go to state 58
+    '-'  shift, and go to state 59
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    MAIOR_IGUAL  error (nonassociative)
+    MENOR_IGUAL  error (nonassociative)
+    IGUAL        error (nonassociative)
+    DIF          error (nonassociative)
+    '<'          error (nonassociative)
+    '>'          error (nonassociative)
+
+    $default  reduce using rule 57 (E)
+
+
+State 91
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   55  | E DIF E .
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '+'  shift, and go to state 58
+    '-'  shift, and go to state 59
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    MAIOR_IGUAL  error (nonassociative)
+    MENOR_IGUAL  error (nonassociative)
+    IGUAL        error (nonassociative)
+    DIF          error (nonassociative)
+    '<'          error (nonassociative)
+    '>'          error (nonassociative)
+
+    $default  reduce using rule 55 (E)
+
+
+State 92
+
+    6 CMD: E ASM ';' .
+
+    $default  reduce using rule 6 (CMD)
+
+
+State 93
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   52  | E '<' E .
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '+'  shift, and go to state 58
+    '-'  shift, and go to state 59
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    MAIOR_IGUAL  error (nonassociative)
+    MENOR_IGUAL  error (nonassociative)
+    IGUAL        error (nonassociative)
+    DIF          error (nonassociative)
+    '<'          error (nonassociative)
+    '>'          error (nonassociative)
+
+    $default  reduce using rule 52 (E)
+
+
+State 94
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   53  | E '>' E .
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '+'  shift, and go to state 58
+    '-'  shift, and go to state 59
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    MAIOR_IGUAL  error (nonassociative)
+    MENOR_IGUAL  error (nonassociative)
+    IGUAL        error (nonassociative)
+    DIF          error (nonassociative)
+    '<'          error (nonassociative)
+    '>'          error (nonassociative)
+
+    $default  reduce using rule 53 (E)
+
+
+State 95
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   59  | E '+' E .
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    $default  reduce using rule 59 (E)
+
+
+State 96
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   60  | E '-' E .
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '*'  shift, and go to state 60
+    '/'  shift, and go to state 61
+    '%'  shift, and go to state 62
+    '^'  shift, and go to state 63
+
+    $default  reduce using rule 60 (E)
+
+
+State 97
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   58  | E '*' E .
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '^'  shift, and go to state 63
+
+    $default  reduce using rule 58 (E)
+
+
+State 98
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   61  | E '/' E .
+   62  | E . '%' E
+
+    '^'  shift, and go to state 63
+
+    $default  reduce using rule 61 (E)
+
+
+State 99
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   62  | E '%' E .
+
+    '^'  shift, and go to state 63
+
+    $default  reduce using rule 62 (E)
+
+
+State 100
+
+   51 E: E . '^' E
+   51  | E '^' E .
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    '^'  shift, and go to state 63
+
+    $default  reduce using rule 51 (E)
+
+
+State 101
+
+   72 F: ID '(' VALORES ')' .
+
+    $default  reduce using rule 72 (F)
+
+
+State 102
+
+   39 ATRIBUTOS: ID '[' ID ']' . ATRIBUTOS
+   41          | ID '[' ID ']' .
+   49          | ID '[' ID ']' . '(' VALORES ')'
+
+    ID   shift, and go to state 104
+    '('  shift, and go to state 118
+
+    $default  reduce using rule 41 (ATRIBUTOS)
+
+    ATRIBUTOS  go to state 119
+
+
+State 103
+
+   27 RVALUE: ID '[' E ']' .
+   35       | ID '[' E ']' . '(' VALORES ')'
+
+    '('  shift, and go to state 120
+
+    $default  reduce using rule 27 (RVALUE)
+
+
+State 104
+
+   39 ATRIBUTOS: ID . '[' ID ']' ATRIBUTOS
+   40          | ID . '.' ID ATRIBUTOS
+   41          | ID . '[' ID ']'
+   42          | ID . '.' ID
+   43          | ID . '.' ID '[' E ']'
+   44          | ID . '.' ID '.' ID
+   45          | ID . '.' ID '.' ID '[' E ']'
+   46          | ID . '.' ID '(' ')'
+   47          | ID . '.' ID '(' VALORES ')'
+   48          | ID . '.' ID '[' ID ']' '(' VALORES ')'
+   49          | ID . '[' ID ']' '(' VALORES ')'
+   50          | ID . '.' ID '.' ID '[' E ']' '(' VALORES ')'
+
+    '['  shift, and go to state 121
+    '.'  shift, and go to state 122
+
+
+State 105
+
+   32 RVALUE: ID '.' ID '(' . ')'
+   33       | ID '.' ID '(' . VALORES ')'
+   46 ATRIBUTOS: ID '.' ID '(' . ')'
+   47          | ID '.' ID '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    ')'     shift, and go to state 123
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 124
+    BLOCOVAZIO  go to state 39
+
+
+State 106
+
+   29 RVALUE: ID '.' ID '[' . E ']'
+   34       | ID '.' ID '[' . E ']' '(' VALORES ')'
+   43 ATRIBUTOS: ID '.' ID '[' . E ']'
+   48          | ID '.' ID '[' . ID ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 125
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 126
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 107
+
+   30 RVALUE: ID '.' ID '.' . ID
+   31       | ID '.' ID '.' . ID '[' E ']'
+   36       | ID '.' ID '.' . ID '[' E ']' '(' VALORES ')'
+   44 ATRIBUTOS: ID '.' ID '.' . ID
+   45          | ID '.' ID '.' . ID '[' E ']'
+   50          | ID '.' ID '.' . ID '[' E ']' '(' VALORES ')'
+
+    ID  shift, and go to state 127
+
+
+State 108
+
+   40 ATRIBUTOS: ID '.' ID ATRIBUTOS .
+
+    $default  reduce using rule 40 (ATRIBUTOS)
+
+
+State 109
+
+   21 DECLARACAO: ID '=' E .
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+    $default  reduce using rule 21 (DECLARACAO)
+
+
+State 110
+
+   19 DECLARACOES: DECLARACAO ',' DECLARACOES .
+
+    $default  reduce using rule 19 (DECLARACOES)
+
+
+State 111
+
+    7 CMD: IF '(' E ')' . CMD
+    8    | IF '(' E ')' . CMD ELSE CMD
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    CMD         go to state 128
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 112
+
+   12 CMD: FOR '(' ATRIB ';' . E ';' ATRIB ')' CMD
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 129
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 113
+
+   15 PARAMETERS: ID .
+
+    $default  reduce using rule 15 (PARAMETERS)
+
+
+State 114
+
+    9 CMD: FUNCTION ID '(' ')' . CMD
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    CMD         go to state 130
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 115
+
+   10 CMD: FUNCTION ID '(' PARAMETERS . ')' CMD
+   14 PARAMETERS: PARAMETERS . ',' ID
+
+    ')'  shift, and go to state 131
+    ','  shift, and go to state 132
+
+
+State 116
+
+   28 RVALUE: ID '.' ID .
+   29       | ID '.' ID . '[' E ']'
+   30       | ID '.' ID . '.' ID
+   31       | ID '.' ID . '.' ID '[' E ']'
+   32       | ID '.' ID . '(' ')'
+   33       | ID '.' ID . '(' VALORES ')'
+   34       | ID '.' ID . '[' E ']' '(' VALORES ')'
+   36       | ID '.' ID . '.' ID '[' E ']' '(' VALORES ')'
+
+    '('  shift, and go to state 133
+    '['  shift, and go to state 134
+    '.'  shift, and go to state 135
+
+    $default  reduce using rule 28 (RVALUE)
+
+
+State 117
+
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+   74 VALORES: VALORES ',' E .
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+
+    $default  reduce using rule 74 (VALORES)
+
+
+State 118
+
+   49 ATRIBUTOS: ID '[' ID ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 136
+    BLOCOVAZIO  go to state 39
+
+
+State 119
+
+   39 ATRIBUTOS: ID '[' ID ']' ATRIBUTOS .
+
+    $default  reduce using rule 39 (ATRIBUTOS)
+
+
+State 120
+
+   35 RVALUE: ID '[' E ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 137
+    BLOCOVAZIO  go to state 39
+
+
+State 121
+
+   39 ATRIBUTOS: ID '[' . ID ']' ATRIBUTOS
+   41          | ID '[' . ID ']'
+   49          | ID '[' . ID ']' '(' VALORES ')'
+
+    ID  shift, and go to state 138
+
+
+State 122
+
+   40 ATRIBUTOS: ID '.' . ID ATRIBUTOS
+   42          | ID '.' . ID
+   43          | ID '.' . ID '[' E ']'
+   44          | ID '.' . ID '.' ID
+   45          | ID '.' . ID '.' ID '[' E ']'
+   46          | ID '.' . ID '(' ')'
+   47          | ID '.' . ID '(' VALORES ')'
+   48          | ID '.' . ID '[' ID ']' '(' VALORES ')'
+   50          | ID '.' . ID '.' ID '[' E ']' '(' VALORES ')'
+
+    ID  shift, and go to state 139
+
+
+State 123
+
+   32 RVALUE: ID '.' ID '(' ')' .
+   46 ATRIBUTOS: ID '.' ID '(' ')' .
+
+    '='       reduce using rule 46 (ATRIBUTOS)
+    $default  reduce using rule 32 (RVALUE)
+
+
+State 124
+
+   33 RVALUE: ID '.' ID '(' VALORES . ')'
+   47 ATRIBUTOS: ID '.' ID '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 140
+    ','  shift, and go to state 85
+
+
+State 125
+
+   27 RVALUE: ID . '[' E ']'
+   28       | ID . '.' ID
+   29       | ID . '.' ID '[' E ']'
+   30       | ID . '.' ID '.' ID
+   31       | ID . '.' ID '.' ID '[' E ']'
+   32       | ID . '.' ID '(' ')'
+   33       | ID . '.' ID '(' VALORES ')'
+   34       | ID . '.' ID '[' E ']' '(' VALORES ')'
+   35       | ID . '[' E ']' '(' VALORES ')'
+   36       | ID . '.' ID '.' ID '[' E ']' '(' VALORES ')'
+   37       | ID .
+   48 ATRIBUTOS: ID '.' ID '[' ID . ']' '(' VALORES ')'
+   67 F: ID . '=' E
+   71  | ID . '(' ')'
+   72  | ID . '(' VALORES ')'
+   73  | ID . ':' E
+
+    '='  shift, and go to state 79
+    '('  shift, and go to state 25
+    '['  shift, and go to state 80
+    ']'  shift, and go to state 141
+    '.'  shift, and go to state 81
+    ':'  shift, and go to state 28
+
+    ']'       [reduce using rule 37 (RVALUE)]
+    $default  reduce using rule 37 (RVALUE)
+
+
+State 126
+
+   29 RVALUE: ID '.' ID '[' E . ']'
+   34       | ID '.' ID '[' E . ']' '(' VALORES ')'
+   43 ATRIBUTOS: ID '.' ID '[' E . ']'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 142
+
+
+State 127
+
+   30 RVALUE: ID '.' ID '.' ID .
+   31       | ID '.' ID '.' ID . '[' E ']'
+   36       | ID '.' ID '.' ID . '[' E ']' '(' VALORES ')'
+   44 ATRIBUTOS: ID '.' ID '.' ID .
+   45          | ID '.' ID '.' ID . '[' E ']'
+   50          | ID '.' ID '.' ID . '[' E ']' '(' VALORES ')'
+
+    '['  shift, and go to state 143
+
+    '='       reduce using rule 44 (ATRIBUTOS)
+    $default  reduce using rule 30 (RVALUE)
+
+
+State 128
+
+    7 CMD: IF '(' E ')' CMD .
+    8    | IF '(' E ')' CMD . ELSE CMD
+
+    ELSE  shift, and go to state 144
+
+    ELSE      [reduce using rule 7 (CMD)]
+    $default  reduce using rule 7 (CMD)
+
+
+State 129
+
+   12 CMD: FOR '(' ATRIB ';' E . ';' ATRIB ')' CMD
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ';'          shift, and go to state 145
+
+
+State 130
+
+    9 CMD: FUNCTION ID '(' ')' CMD .
+
+    $default  reduce using rule 9 (CMD)
+
+
+State 131
+
+   10 CMD: FUNCTION ID '(' PARAMETERS ')' . CMD
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    CMD         go to state 146
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 132
+
+   14 PARAMETERS: PARAMETERS ',' . ID
+
+    ID  shift, and go to state 147
+
+
+State 133
+
+   32 RVALUE: ID '.' ID '(' . ')'
+   33       | ID '.' ID '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    ')'     shift, and go to state 148
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 149
+    BLOCOVAZIO  go to state 39
+
+
+State 134
+
+   29 RVALUE: ID '.' ID '[' . E ']'
+   34       | ID '.' ID '[' . E ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 150
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 135
+
+   30 RVALUE: ID '.' ID '.' . ID
+   31       | ID '.' ID '.' . ID '[' E ']'
+   36       | ID '.' ID '.' . ID '[' E ']' '(' VALORES ')'
+
+    ID  shift, and go to state 151
+
+
+State 136
+
+   49 ATRIBUTOS: ID '[' ID ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 152
+    ','  shift, and go to state 85
+
+
+State 137
+
+   35 RVALUE: ID '[' E ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 153
+    ','  shift, and go to state 85
+
+
+State 138
+
+   39 ATRIBUTOS: ID '[' ID . ']' ATRIBUTOS
+   41          | ID '[' ID . ']'
+   49          | ID '[' ID . ']' '(' VALORES ')'
+
+    ']'  shift, and go to state 102
+
+
+State 139
+
+   40 ATRIBUTOS: ID '.' ID . ATRIBUTOS
+   42          | ID '.' ID .
+   43          | ID '.' ID . '[' E ']'
+   44          | ID '.' ID . '.' ID
+   45          | ID '.' ID . '.' ID '[' E ']'
+   46          | ID '.' ID . '(' ')'
+   47          | ID '.' ID . '(' VALORES ')'
+   48          | ID '.' ID . '[' ID ']' '(' VALORES ')'
+   50          | ID '.' ID . '.' ID '[' E ']' '(' VALORES ')'
+
+    ID   shift, and go to state 104
+    '('  shift, and go to state 154
+    '['  shift, and go to state 155
+    '.'  shift, and go to state 156
+
+    $default  reduce using rule 42 (ATRIBUTOS)
+
+    ATRIBUTOS  go to state 108
+
+
+State 140
+
+   33 RVALUE: ID '.' ID '(' VALORES ')' .
+   47 ATRIBUTOS: ID '.' ID '(' VALORES ')' .
+
+    '='       reduce using rule 47 (ATRIBUTOS)
+    $default  reduce using rule 33 (RVALUE)
+
+
+State 141
+
+   48 ATRIBUTOS: ID '.' ID '[' ID ']' . '(' VALORES ')'
+
+    '('  shift, and go to state 157
+
+
+State 142
+
+   29 RVALUE: ID '.' ID '[' E ']' .
+   34       | ID '.' ID '[' E ']' . '(' VALORES ')'
+   43 ATRIBUTOS: ID '.' ID '[' E ']' .
+
+    '('  shift, and go to state 158
+
+    '='       reduce using rule 43 (ATRIBUTOS)
+    $default  reduce using rule 29 (RVALUE)
+
+
+State 143
+
+   31 RVALUE: ID '.' ID '.' ID '[' . E ']'
+   36       | ID '.' ID '.' ID '[' . E ']' '(' VALORES ')'
+   45 ATRIBUTOS: ID '.' ID '.' ID '[' . E ']'
+   50          | ID '.' ID '.' ID '[' . E ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 159
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 144
+
+    8 CMD: IF '(' E ')' CMD ELSE . CMD
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    CMD         go to state 160
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 145
+
+   12 CMD: FOR '(' ATRIB ';' E ';' . ATRIB ')' CMD
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 2
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    ATRIB       go to state 161
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    F           go to state 77
+    BLOCOVAZIO  go to state 39
+
+
+State 146
+
+   10 CMD: FUNCTION ID '(' PARAMETERS ')' CMD .
+
+    $default  reduce using rule 10 (CMD)
+
+
+State 147
+
+   14 PARAMETERS: PARAMETERS ',' ID .
+
+    $default  reduce using rule 14 (PARAMETERS)
+
+
+State 148
+
+   32 RVALUE: ID '.' ID '(' ')' .
+
+    $default  reduce using rule 32 (RVALUE)
+
+
+State 149
+
+   33 RVALUE: ID '.' ID '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 162
+    ','  shift, and go to state 85
+
+
+State 150
+
+   29 RVALUE: ID '.' ID '[' E . ']'
+   34       | ID '.' ID '[' E . ']' '(' VALORES ')'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 163
+
+
+State 151
+
+   30 RVALUE: ID '.' ID '.' ID .
+   31       | ID '.' ID '.' ID . '[' E ']'
+   36       | ID '.' ID '.' ID . '[' E ']' '(' VALORES ')'
+
+    '['  shift, and go to state 164
+
+    $default  reduce using rule 30 (RVALUE)
+
+
+State 152
+
+   49 ATRIBUTOS: ID '[' ID ']' '(' VALORES ')' .
+
+    $default  reduce using rule 49 (ATRIBUTOS)
+
+
+State 153
+
+   35 RVALUE: ID '[' E ']' '(' VALORES ')' .
+
+    $default  reduce using rule 35 (RVALUE)
+
+
+State 154
+
+   46 ATRIBUTOS: ID '.' ID '(' . ')'
+   47          | ID '.' ID '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    ')'     shift, and go to state 165
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 166
+    BLOCOVAZIO  go to state 39
+
+
+State 155
+
+   43 ATRIBUTOS: ID '.' ID '[' . E ']'
+   48          | ID '.' ID '[' . ID ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 125
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 167
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 156
+
+   44 ATRIBUTOS: ID '.' ID '.' . ID
+   45          | ID '.' ID '.' . ID '[' E ']'
+   50          | ID '.' ID '.' . ID '[' E ']' '(' VALORES ')'
+
+    ID  shift, and go to state 168
+
+
+State 157
+
+   48 ATRIBUTOS: ID '.' ID '[' ID ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 169
+    BLOCOVAZIO  go to state 39
+
+
+State 158
+
+   34 RVALUE: ID '.' ID '[' E ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 170
+    BLOCOVAZIO  go to state 39
+
+
+State 159
+
+   31 RVALUE: ID '.' ID '.' ID '[' E . ']'
+   36       | ID '.' ID '.' ID '[' E . ']' '(' VALORES ')'
+   45 ATRIBUTOS: ID '.' ID '.' ID '[' E . ']'
+   50          | ID '.' ID '.' ID '[' E . ']' '(' VALORES ')'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 171
+
+
+State 160
+
+    8 CMD: IF '(' E ')' CMD ELSE CMD .
+
+    $default  reduce using rule 8 (CMD)
+
+
+State 161
+
+   12 CMD: FOR '(' ATRIB ';' E ';' ATRIB . ')' CMD
+
+    ')'  shift, and go to state 172
+
+
+State 162
+
+   33 RVALUE: ID '.' ID '(' VALORES ')' .
+
+    $default  reduce using rule 33 (RVALUE)
+
+
+State 163
+
+   29 RVALUE: ID '.' ID '[' E ']' .
+   34       | ID '.' ID '[' E ']' . '(' VALORES ')'
+
+    '('  shift, and go to state 158
+
+    $default  reduce using rule 29 (RVALUE)
+
+
+State 164
+
+   31 RVALUE: ID '.' ID '.' ID '[' . E ']'
+   36       | ID '.' ID '.' ID '[' . E ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 173
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 165
+
+   46 ATRIBUTOS: ID '.' ID '(' ')' .
+
+    $default  reduce using rule 46 (ATRIBUTOS)
+
+
+State 166
+
+   47 ATRIBUTOS: ID '.' ID '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 174
+    ','  shift, and go to state 85
+
+
+State 167
+
+   43 ATRIBUTOS: ID '.' ID '[' E . ']'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 175
+
+
+State 168
+
+   44 ATRIBUTOS: ID '.' ID '.' ID .
+   45          | ID '.' ID '.' ID . '[' E ']'
+   50          | ID '.' ID '.' ID . '[' E ']' '(' VALORES ')'
+
+    '['  shift, and go to state 176
+
+    $default  reduce using rule 44 (ATRIBUTOS)
+
+
+State 169
+
+   48 ATRIBUTOS: ID '.' ID '[' ID ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 177
+    ','  shift, and go to state 85
+
+
+State 170
+
+   34 RVALUE: ID '.' ID '[' E ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 178
+    ','  shift, and go to state 85
+
+
+State 171
+
+   31 RVALUE: ID '.' ID '.' ID '[' E ']' .
+   36       | ID '.' ID '.' ID '[' E ']' . '(' VALORES ')'
+   45 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' .
+   50          | ID '.' ID '.' ID '[' E ']' . '(' VALORES ')'
+
+    '('  shift, and go to state 179
+
+    '='       reduce using rule 45 (ATRIBUTOS)
+    $default  reduce using rule 31 (RVALUE)
+
+
+State 172
+
+   12 CMD: FOR '(' ATRIB ';' E ';' ATRIB ')' . CMD
+
+    NUM       shift, and go to state 1
+    ID        shift, and go to state 2
+    LET       shift, and go to state 3
+    STRING    shift, and go to state 4
+    IF        shift, and go to state 5
+    FOR       shift, and go to state 6
+    FUNCTION  shift, and go to state 7
+    RETURN    shift, and go to state 8
+    '('       shift, and go to state 9
+    '{'       shift, and go to state 10
+    '['       shift, and go to state 11
+
+    CMD         go to state 180
+    CMD_LET     go to state 15
+    BLOCO       go to state 16
+    ATRIB       go to state 17
+    LVALUEPROP  go to state 18
+    RVALUE      go to state 19
+    ATRIBUTOS   go to state 20
+    E           go to state 21
+    F           go to state 22
+    BLOCOVAZIO  go to state 23
+
+
+State 173
+
+   31 RVALUE: ID '.' ID '.' ID '[' E . ']'
+   36       | ID '.' ID '.' ID '[' E . ']' '(' VALORES ')'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 181
+
+
+State 174
+
+   47 ATRIBUTOS: ID '.' ID '(' VALORES ')' .
+
+    $default  reduce using rule 47 (ATRIBUTOS)
+
+
+State 175
+
+   43 ATRIBUTOS: ID '.' ID '[' E ']' .
+
+    $default  reduce using rule 43 (ATRIBUTOS)
+
+
+State 176
+
+   45 ATRIBUTOS: ID '.' ID '.' ID '[' . E ']'
+   50          | ID '.' ID '.' ID '[' . E ']' '(' VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 182
+    F           go to state 38
+    BLOCOVAZIO  go to state 39
+
+
+State 177
+
+   48 ATRIBUTOS: ID '.' ID '[' ID ']' '(' VALORES ')' .
+
+    $default  reduce using rule 48 (ATRIBUTOS)
+
+
+State 178
+
+   34 RVALUE: ID '.' ID '[' E ']' '(' VALORES ')' .
+
+    $default  reduce using rule 34 (RVALUE)
+
+
+State 179
+
+   36 RVALUE: ID '.' ID '.' ID '[' E ']' '(' . VALORES ')'
+   50 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 183
+    BLOCOVAZIO  go to state 39
+
+
+State 180
+
+   12 CMD: FOR '(' ATRIB ';' E ';' ATRIB ')' CMD .
+
+    $default  reduce using rule 12 (CMD)
+
+
+State 181
+
+   31 RVALUE: ID '.' ID '.' ID '[' E ']' .
+   36       | ID '.' ID '.' ID '[' E ']' . '(' VALORES ')'
+
+    '('  shift, and go to state 184
+
+    $default  reduce using rule 31 (RVALUE)
+
+
+State 182
+
+   45 ATRIBUTOS: ID '.' ID '.' ID '[' E . ']'
+   50          | ID '.' ID '.' ID '[' E . ']' '(' VALORES ')'
+   51 E: E . '^' E
+   52  | E . '<' E
+   53  | E . '>' E
+   54  | E . MAIOR_IGUAL E
+   55  | E . DIF E
+   56  | E . MENOR_IGUAL E
+   57  | E . IGUAL E
+   58  | E . '*' E
+   59  | E . '+' E
+   60  | E . '-' E
+   61  | E . '/' E
+   62  | E . '%' E
+
+    MAIOR_IGUAL  shift, and go to state 51
+    MENOR_IGUAL  shift, and go to state 52
+    IGUAL        shift, and go to state 53
+    DIF          shift, and go to state 54
+    '<'          shift, and go to state 56
+    '>'          shift, and go to state 57
+    '+'          shift, and go to state 58
+    '-'          shift, and go to state 59
+    '*'          shift, and go to state 60
+    '/'          shift, and go to state 61
+    '%'          shift, and go to state 62
+    '^'          shift, and go to state 63
+    ']'          shift, and go to state 185
+
+
+State 183
+
+   36 RVALUE: ID '.' ID '.' ID '[' E ']' '(' VALORES . ')'
+   50 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 186
+    ','  shift, and go to state 85
+
+
+State 184
+
+   36 RVALUE: ID '.' ID '.' ID '[' E ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 187
+    BLOCOVAZIO  go to state 39
+
+
+State 185
+
+   45 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' .
+   50          | ID '.' ID '.' ID '[' E ']' . '(' VALORES ')'
+
+    '('  shift, and go to state 188
+
+    $default  reduce using rule 45 (ATRIBUTOS)
+
+
+State 186
+
+   36 RVALUE: ID '.' ID '.' ID '[' E ']' '(' VALORES ')' .
+   50 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' '(' VALORES ')' .
+
+    '='       reduce using rule 50 (ATRIBUTOS)
+    $default  reduce using rule 36 (RVALUE)
+
+
+State 187
+
+   36 RVALUE: ID '.' ID '.' ID '[' E ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 189
+    ','  shift, and go to state 85
+
+
+State 188
+
+   50 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' '(' . VALORES ')'
+
+    NUM     shift, and go to state 1
+    ID      shift, and go to state 35
+    STRING  shift, and go to state 4
+    '('     shift, and go to state 9
+    '{'     shift, and go to state 36
+    '['     shift, and go to state 11
+
+    RVALUE      go to state 19
+    E           go to state 67
+    F           go to state 38
+    VALORES     go to state 190
+    BLOCOVAZIO  go to state 39
+
+
+State 189
+
+   36 RVALUE: ID '.' ID '.' ID '[' E ']' '(' VALORES ')' .
+
+    $default  reduce using rule 36 (RVALUE)
+
+
+State 190
+
+   50 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' '(' VALORES . ')'
+   74 VALORES: VALORES . ',' E
+
+    ')'  shift, and go to state 191
+    ','  shift, and go to state 85
+
+
+State 191
+
+   50 ATRIBUTOS: ID '.' ID '.' ID '[' E ']' '(' VALORES ')' .
+
+    $default  reduce using rule 50 (ATRIBUTOS)
