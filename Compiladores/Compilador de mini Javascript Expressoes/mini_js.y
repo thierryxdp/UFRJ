@@ -38,6 +38,7 @@ int coluna = 1;
 
 int contador_parametros = 0;
 int contador_argumentos = 0;
+int contador_parametros_expressao = 0;
 %}
 
 %token NUM ID LET STRING IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
@@ -72,7 +73,7 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | FUNCTION ID '('')' CMD             { string func_endereco = gera_label( "funcao" ); 
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
                                            funcoes = funcoes + (":" + func_endereco) + $5.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
-    | FUNCTION ID '(' PARAMETERS ')' CMD { string func_endereco = gera_label( "funcao" ); 
+    | FUNCTION ID '(' PARAMETERS ')' CMD { string func_endereco = gera_label( "funcao" );
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
                                            funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $4.c; contador_parametros = 0;
                                            funcoes = funcoes + $6.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
@@ -80,19 +81,22 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | FOR '(' ATRIB ';' E ';' ATRIB ')' CMD          { string endfor = gera_label( "end_for" );
                                                        string beginfor = gera_label( "begin_for" );
                                                        $$.c = $3.c + "^" + (":" + beginfor) + $5.c + "!" + endfor + "?" 
-                                                       + $9.c + $7.c + "^" + $5.c + beginfor + "?" + (":" + endfor);}                               
+                                                       + $9.c + $7.c + "^" + $5.c + beginfor + "?" + (":" + endfor);}
+    | FOR '(' CMD_LET ';' E ';' ATRIB ')' CMD        { string endfor = gera_label( "end_for" );
+                                                       string beginfor = gera_label( "begin_for" );
+                                                       $$.c = $3.c + (":" + beginfor) + $5.c + "!" + endfor + "?" 
+                                                       + $9.c + $7.c + "^" + $5.c + beginfor + "?" + (":" + endfor);}
     | BLOCO
     ;
 
-PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
-           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
+PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros =+ 1; }
+           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros =+ 1; }
            ; 
            
 CMD_LET :  LET DECLARACOES     { $$.c = $2.c; }
         ;
 
 BLOCO : '{' CMDs '}'          { $$.c = $2.c; }
-      | BLOCOVAZIO
       ;
 
 DECLARACOES: DECLARACAO ',' DECLARACOES  { $$.c = $1.c + $3.c; }
@@ -173,7 +177,7 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
   | E '-' E             { $$.c = $1.c + $3.c + "-"; } 
   | E '/' E             { $$.c = $1.c + $3.c + "/"; }
   | E '%' E             { $$.c = $1.c + $3.c + "%"; }
-  | F
+  | F                   { $$.c = $1.c; contador_parametros = 0; }
   ;
 
 
@@ -181,7 +185,8 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
 F : RVALUE          { $$.c = $1.c; }
   | NUM             { $$.c = $1.c; }
   | STRING          { $$.c = $1.c; }
-  | ID '=' E        { $$.c = $1.c + $3.c + "="; }  
+  | ID '=' E        { $$.c = $1.c + $3.c + "="; }
+  | ID '[' E ']' '=' E{ $$.c = $1.c + "@" + $3.c + $6.c + "[=]"; }  
   | BLOCOVAZIO      { $$.c = novo + "{}"; }
   | '['']'          { $$.c = novo + "[]"; }
   | '(' E ')'       { $$ = $2; }
@@ -189,13 +194,29 @@ F : RVALUE          { $$.c = $1.c; }
   | ID '(' VALORES ')'    { $$.c = $3.c + to_string(contador_parametros) + $1.c + "@" + "$"; contador_parametros = 0; }
   | ID ':' E        { $$.c = $1.c + $3.c + "[<=]"; }
   | CONST           { $$.c = $1.c; }
+  | FUNCAO_SETA     { $$.c = $1.c; }
   ;
 
+HEAD : ID            { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
+     | '(' PARAM ')' { $$.c = $2.c; }
+     ;
+
+PARAM : PARAM ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
+      | ID           { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
+      ;   
+      
+FUNCAO_SETA : HEAD SETA E                { string func_endereco = gera_label( "funcao" );
+                                           $$.c = novo + "{}" + "\'&funcao\'" + func_endereco + "[<=]"; 
+                                           funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $1.c; contador_parametros_expressao = 0;
+                                           funcoes = funcoes + $3.c; funcoes = funcoes + "\'&retorno\'" + "@" + "~"; }
+            ;
+
+              
 CONST : TRUE        { $$.c = novo + "true"; }
       | FALSE       { $$.c = novo + "false"; }
       ;
       
-VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c; }
+VALORES : VALORES ',' E { contador_parametros += 2; $$.c = $1.c + $3.c; }
         | E             { contador_parametros = 1; $$.c = $1.c; }
         ;
         
