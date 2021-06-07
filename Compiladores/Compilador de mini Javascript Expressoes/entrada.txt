@@ -2,18 +2,12 @@ function log( msg ) {
   msg asm{println # undefined};
 }
 
-function map( a, f ) {
-  let res = [];
-
-  forEach( a, (x,j) => (res[j] = f(x)) );
-  
-  return res;
+function imprimeMdc( a = 36, b = 48, print = m => log( 'Saida: ' + m )  ) {
+  if( b == 0 )
+    print( a );
+  else
+    imprimeMdc( b, a%b, print );
 }
 
-function forEach( array, funcao ) {
-  for( let i = 0; i < array.size; i = i + 1 )
-    funcao( array[i], i );
-}
-
-let a = [ 1, 2, 3, 4 ];
-log( map( a, x => x*x + 1 ) );
+imprimeMdc( 24, 18 );
+imprimeMdc( 8, 4, log );

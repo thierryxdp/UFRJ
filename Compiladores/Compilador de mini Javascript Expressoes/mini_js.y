@@ -33,12 +33,19 @@ vector<string> tokeniza(string original);
 vector<string> novo;
 vector<string> funcoes;
 
+string name;
+
 int linha = 1;
 int coluna = 1;
 
 int contador_parametros = 0;
 int contador_argumentos = 0;
 int contador_parametros_expressao = 0;
+int map_position_default_value = 0;
+int contador_default = 0;
+
+map<int, vector<string>> default_values;
+map<string, int> function_defaultparameters;
 %}
 
 %token NUM ID LET STRING IF ELSE WHILE FOR MAIOR_IGUAL MENOR_IGUAL IGUAL DIF
@@ -73,10 +80,13 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | FUNCTION ID '('')' CMD             { string func_endereco = gera_label( "funcao" ); 
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
                                            funcoes = funcoes + (":" + func_endereco) + $5.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
-    | FUNCTION ID '(' PARAMETERS ')' CMD { string func_endereco = gera_label( "funcao" );
+    | FUNCTION ID '(' PARAMETERS ')' CMD { string func_endereco = gera_label( "funcao" ); 
                                            $$.c = $2.c + "&" + $2.c + "{}" + "=" + "\'&funcao\'" + func_endereco + "[=]" + "^"; 
                                            funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $4.c; contador_parametros = 0;
-                                           funcoes = funcoes + $6.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~"; }
+                                           funcoes = funcoes + $6.c; funcoes = funcoes + "undefined" + "@" + "\'&retorno\'" + "@" + "~";
+                                           string aux; vector<string> holder = $2.c;
+                                           for (int i = 0; i < holder.size(); i++) aux += holder[i]; name = aux; function_defaultparameters.insert({name, 0}); aux = "";
+                                           function_defaultparameters[name] = contador_default; }                                        
     | RETURN E ';'                       { $$.c = $2.c + "\'&retorno\'" + "@" + "~"; }
     | FOR '(' ATRIB ';' E ';' ATRIB ')' CMD          { string endfor = gera_label( "end_for" );
                                                        string beginfor = gera_label( "begin_for" );
@@ -89,14 +99,18 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     | BLOCO
     ;
 
+
 PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros =+ 1; }
            | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros =+ 1; }
+           | PARAMETERS ',' ID '=' E { vector<string> aux; aux = $5.c; $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_default) + "[@]" + "=" + "^";                                   contador_default += 1; default_values.insert({map_position_default_value++, aux});  }
+           | ID '=' E          { vector<string> aux; aux = $3.c; $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_default) + "[@]" + "=" + "^";                             contador_default += 1; default_values.insert({map_position_default_value++, aux}); } 
            ; 
            
 CMD_LET :  LET DECLARACOES     { $$.c = $2.c; }
         ;
 
 BLOCO : '{' CMDs '}'          { $$.c = $2.c; }
+      | BLOCOVAZIO
       ;
 
 DECLARACOES: DECLARACAO ',' DECLARACOES  { $$.c = $1.c + $3.c; }
@@ -146,7 +160,7 @@ ARGS : ARGS ',' E     { contador_argumentos += 1; $$.c = $1.c + to_string(contad
      | E              { contador_argumentos = 0; $$.c = novo + to_string(contador_argumentos) + $1.c + "[<=]"; }
      ;
        
-ATRIBUTOS : ID '[' ID ']' ATRIBUTOS       { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
+ATRIBUTOS : ID '[' ID ']' ATRIBUTOS      { $$.c = $1.c + "@" + $3.c + "[@]" + $5.c; }
           | ID '.' ID ATRIBUTOS          { $$.c = $1.c + "@" + $3.c + "[@]" + $4.c; }
           | ID '[' ID ']'                { $$.c = $1.c + "@" + $3.c; }
           | ID '.' ID                    { $$.c = $1.c + "@" + $3.c; }
@@ -177,7 +191,7 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
   | E '-' E             { $$.c = $1.c + $3.c + "-"; } 
   | E '/' E             { $$.c = $1.c + $3.c + "/"; }
   | E '%' E             { $$.c = $1.c + $3.c + "%"; }
-  | F                   { $$.c = $1.c; contador_parametros = 0; }
+  | F                   { $$.c = $1.c; contador_parametros = 0;}
   ;
 
 
@@ -190,8 +204,12 @@ F : RVALUE          { $$.c = $1.c; }
   | BLOCOVAZIO      { $$.c = novo + "{}"; }
   | '['']'          { $$.c = novo + "[]"; }
   | '(' E ')'       { $$ = $2; }
-  | ID '('')'       { $$.c = novo + "0" + $1.c + "@" + "$"; }
-  | ID '(' VALORES ')'    { $$.c = $3.c + to_string(contador_parametros) + $1.c + "@" + "$"; contador_parametros = 0; }
+  | ID '('')'       { string buff; for (int i = 0; i < $1.c.size(); i++) buff += $1.c[i]; int parametros_default = function_defaultparameters[buff]; 
+                      vector<string> aux; int i = 0; for ( i = 0; i < parametros_default; i++) aux = aux + default_values[i]; 
+                      $$.c = aux + to_string(i) + $1.c + "@" + "$"; }
+  | ID '(' VALORES ')'    { string buff; for (int i = 0; i < $1.c.size(); i++) buff += $1.c[i]; int parametros_default = function_defaultparameters[buff];
+                            vector<string> aux; int i = 0; for ( i = contador_parametros; i < parametros_default; i++) aux = aux + default_values[i];
+                            $$.c = $3.c + aux + to_string(i) + $1.c + "@" + "$"; contador_parametros = 0; }
   | ID ':' E        { $$.c = $1.c + $3.c + "[<=]"; }
   | CONST           { $$.c = $1.c; }
   | FUNCAO_SETA     { $$.c = $1.c; }
