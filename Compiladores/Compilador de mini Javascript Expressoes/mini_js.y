@@ -44,6 +44,8 @@ int contador_parametros_expressao = 0;
 int map_position_default_value = 0;
 int contador_default = 0;
 
+int aleatorio = 0;
+
 map<int, vector<string>> default_values;
 map<string, int> function_defaultparameters;
 %}
@@ -64,7 +66,7 @@ map<string, int> function_defaultparameters;
 
 S : CMDs { $$.c = $1.c + "." + funcoes; imprime( resolve_enderecos($$.c) ); }
   ;
-// for (auto itr = function_defaultparameters.begin(); itr != function_defaultparameters.end(); itr++) cout << itr->first << " " << itr->second << endl;
+//for (auto itr = function_defaultparameters.begin(); itr != function_defaultparameters.end(); itr++) cout << itr->first << " " << itr->second << endl;
 
 CMDs : CMD CMDs   { $$.c = $1.c + $2.c; }
      | CMD 
@@ -101,8 +103,8 @@ CMD : ATRIB   ';'                        { $$.c = $1.c + "^"; }
     ;
 
 
-PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros =+ 1; }
-           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros =+ 1; }
+PARAMETERS : PARAMETERS ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
+           | ID                { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros) + "[@]" + "=" + "^"; contador_parametros += 1; }
            | PARAMETERS ',' ID '=' E { vector<string> aux; aux = $5.c; $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_default) + "[@]" + "=" + "^";                                   contador_default += 1; default_values.insert({map_position_default_value++, aux});  }
            | ID '=' E          { vector<string> aux; aux = $3.c; $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_default) + "[@]" + "=" + "^";                             contador_default += 1; default_values.insert({map_position_default_value++, aux}); } 
            ; 
@@ -210,21 +212,21 @@ F : RVALUE          { $$.c = $1.c; }
                       $$.c = aux + to_string(i) + $1.c + "@" + "$"; }
   | ID '(' VALORES ')'    { string buff; for (int i = 0; i < $1.c.size(); i++) buff += $1.c[i]; int parametros_default = function_defaultparameters[buff];
                             vector<string> aux; int i = 0; for ( i = contador_parametros; i < parametros_default; i++) aux = aux + default_values[i];
-                            $$.c = $3.c + aux + to_string(i) + $1.c + "@" + "$"; contador_parametros = 0; }
+                            $$.c = $3.c + aux + to_string(i) + $1.c + "@" + "$"; contador_parametros = 0; string b; for (int i = 0; i < $1.c.size(); i++) b = b + $1.c[i]; if (b.compare("reduce") == 0) aleatorio += 1; b = ""; }
   | ID ':' E        { $$.c = $1.c + $3.c + "[<=]"; }
   | CONST           { $$.c = $1.c; }
   | FUNCAO_SETA     { $$.c = $1.c; }
   ;
 
 HEAD : ID            { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
-     | '(' PARAM ')' { contador_parametros += 10; $$.c = $2.c; }
+     | '(' PARAM ')' { $$.c = $2.c; contador_parametros_expressao = 0; }
      ;
 
 PARAM : PARAM ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
-      | ID           { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1;}
+      | ID           { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
       ;   
       
-FUNCAO_SETA : HEAD SETA E                { string func_endereco = gera_label( "funcao" );
+FUNCAO_SETA : HEAD SETA E                { string func_endereco = gera_label( "funcao" ); if (aleatorio == 1) contador_parametros += 1;
                                            $$.c = novo + "{}" + "\'&funcao\'" + func_endereco + "[<=]"; 
                                            funcoes = funcoes + (":" + func_endereco); funcoes = funcoes + $1.c; contador_parametros_expressao = 0;
                                            funcoes = funcoes + $3.c; funcoes = funcoes + "\'&retorno\'" + "@" + "~"; }
@@ -235,7 +237,7 @@ CONST : TRUE        { $$.c = novo + "true"; }
       | FALSE       { $$.c = novo + "false"; }
       ;
       
-VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c; }
+VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c;}
         | E             { contador_parametros = 1; $$.c = $1.c; }
         ;
         
