@@ -64,6 +64,7 @@ map<string, int> function_defaultparameters;
 
 S : CMDs { $$.c = $1.c + "." + funcoes; imprime( resolve_enderecos($$.c) ); }
   ;
+// for (auto itr = function_defaultparameters.begin(); itr != function_defaultparameters.end(); itr++) cout << itr->first << " " << itr->second << endl;
 
 CMDs : CMD CMDs   { $$.c = $1.c + $2.c; }
      | CMD 
@@ -191,7 +192,7 @@ E : E '^' E             { $$.c = $1.c + $3.c + "^"; }
   | E '-' E             { $$.c = $1.c + $3.c + "-"; } 
   | E '/' E             { $$.c = $1.c + $3.c + "/"; }
   | E '%' E             { $$.c = $1.c + $3.c + "%"; }
-  | F                   { $$.c = $1.c; contador_parametros = 0;}
+  | F                   { $$.c = $1.c; }
   ;
 
 
@@ -200,7 +201,7 @@ F : RVALUE          { $$.c = $1.c; }
   | NUM             { $$.c = $1.c; }
   | STRING          { $$.c = $1.c; }
   | ID '=' E        { $$.c = $1.c + $3.c + "="; }
-  | ID '[' E ']' '=' E{ $$.c = $1.c + "@" + $3.c + $6.c + "[=]"; }  
+  | ID '[' E ']' '=' E{ $$.c = $1.c + "@" + $3.c + $6.c + "[=]"; contador_parametros += 1; }  
   | BLOCOVAZIO      { $$.c = novo + "{}"; }
   | '['']'          { $$.c = novo + "[]"; }
   | '(' E ')'       { $$ = $2; }
@@ -216,11 +217,11 @@ F : RVALUE          { $$.c = $1.c; }
   ;
 
 HEAD : ID            { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
-     | '(' PARAM ')' { $$.c = $2.c; }
+     | '(' PARAM ')' { contador_parametros += 10; $$.c = $2.c; }
      ;
 
 PARAM : PARAM ',' ID { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
-      | ID           { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1; }
+      | ID           { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + to_string(contador_parametros_expressao) + "[@]" + "=" + "^"; contador_parametros_expressao += 1;}
       ;   
       
 FUNCAO_SETA : HEAD SETA E                { string func_endereco = gera_label( "funcao" );
@@ -234,7 +235,7 @@ CONST : TRUE        { $$.c = novo + "true"; }
       | FALSE       { $$.c = novo + "false"; }
       ;
       
-VALORES : VALORES ',' E { contador_parametros += 2; $$.c = $1.c + $3.c; }
+VALORES : VALORES ',' E { contador_parametros += 1; $$.c = $1.c + $3.c; }
         | E             { contador_parametros = 1; $$.c = $1.c; }
         ;
         
